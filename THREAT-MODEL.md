@@ -3,7 +3,7 @@
 Living document. Update it whenever a feature, dependency or trust boundary changes.
 Architecture and diagrams are in [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
 Test IDs in brackets (e.g. `[T-AUTHZ-03]`) point to automated tests in `backend/tests/`
-(see the mapping in `SECURITY.md`).
+(see the mapping in `SECURITY.md` §2).
 
 Methodology: STRIDE per element, supplemented by OWASP ASVS 4.0.3 (L2 target, L3 for
 auth/admin), OWASP Top 10 (2021), OWASP API Security Top 10 (2023), relevant CWEs,
@@ -142,16 +142,16 @@ Format: **Threat → Attack path → Impact → Mitigation → Detection → Rec
 - **Impact:** Mass account takeover (A1, A2, A3).
 - **Mitigation:**
   - Argon2id makes offline cracking expensive.
-  - Per-IP, per-account and per-account+IP sliding-window limits.
-  - Account-level progressive delay tracked in the DB (`failed_login_count`, `login_locked_until`, exponential up to 15 min). It is not a permanent lock, so an attacker cannot lock victims out indefinitely.
-  - Global login-failure circuit metric.
-  - Uniform error + dummy hash on unknown accounts.
-  - Common-password rejection at registration.
-  - MFA / passkeys.
-  - New-device login notification email.
-- **Detection:** `auth.login_failed` events with IP prefix and account; alerting on the failure-rate ratio per /24 and globally; `auth.login_throttled` events.
-- **Recovery:** Force password reset for affected accounts (admin `revoke-sessions` + reset); raise the global limit tier; block ASN/IP ranges at the proxy.
-- **Tests:** `[T-AUTH-BRUTE]`, `[T-AUTH-ENUM]`.
+  - Limits are checked *before* hashing: per IP (30/5 min), per submitted identifier+IP (10/15 min), per identifier across all IPs (50/h), and per account for MFA (20/h). All of these fail **closed** if Redis is down.
+  - Keys use the *submitted identifier*, so throttling is identical for existing and non-existent accounts. There is no lockout oracle and no permanent lock.
+  - A uniform error plus a dummy argon2 verify on unknown accounts.
+  - Common-password rejection.
+  - MFA and passkeys.
+  - A new-network sign-in email.
+  - An email after 3 MFA failures that followed a correct password.
+- **Detection:** `auth.login_failed` events (IP prefix, account), `ratelimit.exceeded`, `auth.mfa_failed`. Alert on the failure ratio per /24 and globally.
+- **Recovery:** Admin `revoke-sessions` + forced reset; tighten tiers; block ranges at the proxy.
+- **Tests:** `[T-AUTH-BRUTE]`, `[T-AUTH-ENUM]`, ADV-06b.
 
 **S-2 Session fixation** (CWE-384)
 - **Attack path:** An attacker plants a known session cookie (via a subdomain or network position) before the victim logs in.
@@ -386,7 +386,7 @@ Format: **Threat → Attack path → Impact → Mitigation → Detection → Rec
   - No SVG is accepted. The media endpoint sends `Content-Security-Policy: default-src 'none'; sandbox` plus `nosniff`.
   - The API only returns JSON with `nosniff`.
   - Error messages never reflect input.
-- **Detection:** CSP `report-to` endpoint (`/api/v1/csp-report`, rate-limited) logs violations.
+- **Detection:** CSP `report-uri` endpoint (`/api/v1/csp-report`, rate-limited) logs violations.
 - **Recovery:** Hot-fix, rotate sessions if exploitation is suspected.
 - **Tests:** `[T-XSS-*]`, `[T-HEADERS]`.
 
@@ -466,8 +466,13 @@ Format: **Threat → Attack path → Impact → Mitigation → Detection → Rec
 - **Tests:** `[T-REDOS]`.
 
 **D-6 Lockout DoS**
-- **Attack path:** Deliberately failing logins to lock out a victim.
-- **Mitigation:** The progressive delay is keyed **per account+IP prefix** for the lock. The account-wide limit only slows attempts (max 15 min) and never locks permanently. Passkey login stays available.
+- **Attack path:** Deliberately failing logins to lock a victim out.
+- **Mitigation:**
+  - There is no account lock.
+  - Single-source attempts hit the identifier+IP bucket, which doesn't affect the victim's own IP.
+  - A distributed attacker can exhaust the per-identifier budget (50/h), which delays password login by at most an hour.
+  - Passkey login is keyed separately and stays available.
+- **Residual:** Accepted and documented.
 
 ### 6.6 Elevation of privilege
 
@@ -522,6 +527,27 @@ Format: **Threat → Attack path → Impact → Mitigation → Detection → Rec
 - **Mitigation:** No server-side templates render user data. Email bodies use `str.format`-free static text with the link appended, and email headers are validated to reject CR/LF.
 - **Tests:** `[T-INJ-TEMPLATE]`, `[T-INJ-HEADER]`.
 
+**S-9 Account pre-hijacking** (Sudhodanan & Paverd, 2022)
+- **Attack path:** The attacker registers with the victim's email before the victim does (they can't verify it), then plants a PAT, TOTP or passkey. The victim later claims the account through password reset, and the planted credentials would still work.
+- **Mitigation:**
+  - Adding any long-lived credential requires a **verified** email.
+  - The first proof of email control on a never-verified account (password reset) **wipes** TOTP, recovery codes, passkeys and PATs, and is audited as `account.prehijack_cleanup`.
+- **Tests:** ADV-02.
+
+**T-8 Path-normalisation differential**
+- **Attack path:** `/admin/api/v1/me/` or `//` aliases bypass proxy/CDN rules written for canonical paths.
+- **Mitigation:** Strict routing. Trailing or duplicate slashes on API paths return 404. No automatic redirects.
+- **Tests:** ADV-03.
+
+**D-7 Error-path DoS / 500s**
+- **Attack path:** NUL bytes, oversized integers, or constraint races that turn into unhandled DB errors.
+- **Mitigation:**
+  - Control characters and NUL are rejected at the edge.
+  - Integers are strict and bounded to INT32.
+  - DB errors are mapped globally: `IntegrityError`→409, `DataError`→400, `OperationalError`→503.
+  - The route sweep asserts that no garbage input produces a 500.
+- **Tests:** ADV-01, ADV-09b, ADV-11, `[T-ROUTES]`.
+
 ---
 
 ## 7. Privacy threats (LINDDUN-lite)
@@ -542,7 +568,7 @@ Format: **Threat → Attack path → Impact → Mitigation → Detection → Rec
 
 | # | Abuse case | Defences |
 |---|---|---|
-| AB-1 | Bot mass-registration | Per-IP registration limit (5/h per /24 IPv4 or /48 IPv6), email verification required to post/DM/upload, disposable-domain blocklist hook, proof-of-work challenge on registration (hashcash-style, adaptive difficulty) instead of CAPTCHA |
+| AB-1 | Bot mass-registration | Per-IP registration limit (5/h per /24 IPv4 or /48 IPv6), email verification required to post/DM/upload, proof-of-work challenge on registration (hashcash-style, adaptive difficulty) instead of CAPTCHA |
 | AB-2 | Spam posting | Trust-tiered post limits (new: 10/h, verified: 60/h, established: 200/h), duplicate-content detection (same normalised text hash posted > 3× in 1 h is rejected), link limits per post for new accounts, domain blocklist |
 | AB-3 | Mass following (follow-back farming) | Follow limits per trust tier (new: 50/day, established: 400/day), a follow/unfollow churn limit |
 | AB-4 | Mass unsolicited DMs | Recipient's `dm_policy` (default: people I follow); new accounts may start ≤ 10 new conversations/day; message rate limits; block ends the conversation |
@@ -589,4 +615,13 @@ Format: **Threat → Attack path → Impact → Mitigation → Detection → Rec
 
 ## 11. Residual risks
 
-Tracked in `SECURITY.md` §Known limitations and §Unresolved risks.
+Tracked in [`SECURITY.md`](SECURITY.md) §5 (Known limitations, Unresolved risks, Recommended future hardening).
+The adversarial findings that shaped this model (ADV-01 … ADV-11) are tabulated in `SECURITY.md` §3.
+
+## 12. Change log
+
+| Date | Change |
+|---|---|
+| 2026-09-30 | Initial model (Phase 0) |
+| 2026-09-30 | S-1/D-6 rewritten: identifier-keyed throttling replaces the per-account lock (enumeration oracle, D-1) |
+| 2026-09-30 | Added S-9 account pre-hijacking, T-8 path-normalisation differential, D-7 error-path DoS (Phase 11 findings) |

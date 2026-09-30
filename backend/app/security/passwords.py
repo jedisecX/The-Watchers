@@ -104,3 +104,7 @@ def check_password_policy(pw: str, *, handle: str = "", email: str = "") -> None
     for ctx in (handle.lower(), local):
         if ctx and len(ctx) >= 3 and ctx in low:
             raise PasswordPolicyError("password_contains_identity", "Password must not contain your username or email.")
+
+
+# Not a password: a sentinel that can never verify (it is not a valid argon2 encoding), used to force a reset.
+UNUSABLE_PASSWORD_HASH = "!reset-required"  # noqa: S105  # nosec B105

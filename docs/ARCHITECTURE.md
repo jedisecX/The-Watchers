@@ -4,7 +4,8 @@
 > Minimise attack surface, isolate failures, validate every boundary.
 
 This document covers the system architecture, data flows and trust boundaries.
-The threat model built on top of it is in [`THREAT-MODEL.md`](../THREAT-MODEL.md).
+The threat model built on top of it is in [`THREAT-MODEL.md`](../THREAT-MODEL.md); the controls and their
+verification are in [`SECURITY.md`](../SECURITY.md).
 
 ---
 
@@ -179,13 +180,13 @@ gateway re-checks that the event's recipient is the connected user), and media r
 
 1. `RequestContextMiddleware`: assigns a request ID and resolves the client IP (trusted-proxy aware).
 2. `BodyLimitMiddleware`: rejects on `Content-Length` early, and counts streamed bytes for chunked bodies.
-3. `QueryPollutionMiddleware`: rejects duplicate query keys and oversized query strings.
+3. `QueryPollutionMiddleware`: rejects duplicate query keys, oversized query strings, control characters in path/query, and non-canonical API paths (trailing or duplicate slashes).
 4. `SecurityHeadersMiddleware`: CSP, HSTS, nosniff, Referrer-Policy, Permissions-Policy, COOP/CORP, `Cache-Control: no-store` for API responses.
 5. Router dependencies:
    - `strict_json` body parsing
    - `current_principal` (cookie session **or** bearer PAT, never both)
    - `csrf_protect` (cookie auth + unsafe method)
-   - `rate_limit(<bucket>)`
+   - baseline `api` budget (every request), plus specific buckets such as `enforce_limit(<bucket>)`
    - `require(<permission>)`
 6. Handler → service layer → policy checks → parameterised queries.
 7. Exception handlers: a uniform `{"error": {"code", "message", "request_id"}}` body. No stack traces or DB errors reach clients.

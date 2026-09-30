@@ -10,6 +10,8 @@
   reencrypt                             re-encrypt TOTP secrets with the primary field key (rotation)
   recount                               recompute denormalised counters
   outbox                                (development only) print recent outgoing mail
+  force-reset (--handle H | --all)      incident response: invalidate passwords + revoke sessions/tokens
+  media-rescan                          withdraw any served derivative that is missing or not the declared type
 """
 from __future__ import annotations
 
@@ -24,9 +26,10 @@ from sqlalchemy import delete, func, select, update
 from . import audit, media_store
 from .db import new_session
 from .logging_setup import configure
-from .models import EmailOutbox, Follow, Like, Media, Post, Repost, User
+from .models import EmailOutbox, Follow, Like, Media, Message, Post, PostMedia, Report, Repost, User
+from .models import Session as DbSession
 from .security.crypto import reencrypt_field
-from .security.passwords import hash_password
+from .security.passwords import UNUSABLE_PASSWORD_HASH, hash_password
 from .services import mailer, tokens
 
 
@@ -76,8 +79,23 @@ def purge() -> int:
     db.execute(update(EmailOutbox).where(EmailOutbox.sent_at.is_not(None)).values(body=None))
     db.execute(delete(EmailOutbox).where(EmailOutbox.created_at < now - timedelta(days=30)))
     db.execute(delete(Media).where(Media.state == "failed", Media.created_at < now - timedelta(days=1)))
+    # Uploads never attached to anything within 7 days are orphans (also a storage-abuse vector).
+    orphans = db.execute(select(Media).where(
+        Media.state.in_(("ready", "failed")), Media.created_at < now - timedelta(days=7),
+        ~select(PostMedia.media_id).where(PostMedia.media_id == Media.id).exists(),
+        ~select(Message.id).where(Message.media_id == Media.id).exists(),
+        ~select(User.id).where(User.avatar_media_id == Media.id).exists())).scalars().all()
+    for m in orphans:
+        for v in (m.variants or {}).values():
+            media_store.remove_quietly(media_store.safe_path("store", v["key"]))
+        db.delete(m)
+    # Retention (docs/PRIVACY.md): device history 90 days; closed reports 1 year.
+    n_sess = db.execute(delete(DbSession).where(
+        (DbSession.revoked_at < now - timedelta(days=90)) | (DbSession.expires_at < now - timedelta(days=90)))).rowcount
+    n_rep = db.execute(delete(Report).where(Report.status != "open",
+                                            Report.resolved_at < now - timedelta(days=365))).rowcount
     db.commit()
-    print(f"purged accounts={len(doomed)} tokens={n_tok}")
+    print(f"purged accounts={len(doomed)} tokens={n_tok} sessions={n_sess} reports={n_rep} orphan_media={len(orphans)}")
     return 0
 
 
@@ -91,6 +109,60 @@ def outbox() -> int:
     for m in db.execute(select(EmailOutbox).order_by(EmailOutbox.created_at.desc()).limit(5)).scalars():
         print(f"--- {m.created_at:%H:%M:%S} to={m.to_addr} subject={m.subject}\n{m.body}")
     return 0
+
+
+def force_reset(handle: str | None, everyone: bool) -> int:
+    """Incident response: invalidate passwords (unusable hash), revoke all sessions/tokens, and tell the
+    affected users to reset. MFA/passkeys are kept, so a reset still requires the second factor at login."""
+    if not handle and not everyone:
+        print("specify --handle H or --all", file=sys.stderr)
+        return 2
+    db = new_session()
+    q = select(User).where(User.deleted_at.is_(None))
+    if handle:
+        q = q.where(User.handle_norm == handle.lower())
+    n = 0
+    for u in db.execute(q).scalars():
+        u.password_hash = UNUSABLE_PASSWORD_HASH
+        u.session_epoch = u.session_epoch + 1
+        mailer.security_notice(db, u.email, "As a security precaution your Bastion password was invalidated. "
+                                            "Use 'Forgot password' to choose a new one.")
+        n += 1
+    audit.record(db, action="admin.force_password_reset", actor_id=None, actor_role="system",
+                 details={"scope": "all" if everyone else handle, "count": n})
+    db.commit()
+    print(f"forced password reset for {n} account(s)")
+    return 0
+
+
+MAGIC = {"image/webp": lambda b: b[:4] == b"RIFF" and b[8:12] == b"WEBP",
+         "video/mp4": lambda b: b[4:8] == b"ftyp"}
+
+
+def media_rescan() -> int:
+    """After a suspected worker compromise: verify every served derivative still exists, is inside the
+    store, and carries the magic bytes of its declared type; anything else is withdrawn (state=failed)."""
+    db = new_session()
+    bad = 0
+    for m in db.execute(select(Media).where(Media.state == "ready")).scalars():
+        ok = True
+        for v in (m.variants or {}).values():
+            try:
+                path = media_store.safe_path("store", v["key"])
+                head = path.open("rb").read(16)
+            except (ValueError, OSError, KeyError):
+                ok = False
+                break
+            if v.get("content_type") not in MAGIC or not MAGIC[v["content_type"]](head):
+                ok = False
+                break
+        if not ok:
+            m.state, m.error_code = "failed", "rescan_rejected"
+            bad += 1
+    audit.record(db, action="admin.media_rescan", actor_id=None, actor_role="system", details={"withdrawn": bad})
+    db.commit()
+    print(f"media rescan complete: {bad} item(s) withdrawn")
+    return 0 if bad == 0 else 1
 
 
 def mail_loop() -> int:
@@ -135,13 +207,18 @@ def main(argv: list[str] | None = None) -> int:
     c = sub.add_parser("create-admin")
     c.add_argument("--handle", required=True)
     c.add_argument("--email", required=True)
-    for name in ("verify-audit", "revoke-all-sessions", "purge", "mail-loop", "reencrypt", "recount", "outbox"):
+    for name in ("verify-audit", "revoke-all-sessions", "purge", "mail-loop", "reencrypt", "recount", "outbox",
+                 "media-rescan"):
         sub.add_parser(name)
+    fr = sub.add_parser("force-reset")
+    fr.add_argument("--handle")
+    fr.add_argument("--all", action="store_true", dest="everyone")
     a = ap.parse_args(argv)
     return {
         "create-admin": lambda: create_admin(a.handle, a.email),
         "verify-audit": verify_audit, "revoke-all-sessions": revoke_all, "purge": purge,
         "mail-loop": mail_loop, "reencrypt": reencrypt, "recount": recount, "outbox": outbox,
+        "media-rescan": media_rescan, "force-reset": lambda: force_reset(a.handle, a.everyone),
     }[a.cmd]()
 
 

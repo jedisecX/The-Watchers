@@ -197,3 +197,79 @@ def test_like_wildcard_in_admin_search(factory):
     m = factory.user(role="moderator", mfa=True)
     factory.user("aaa_x")
     assert m.get(A + "/users?q=%25").json()["items"] == []
+
+
+# ------------------------------------------------------------------ operator CLI (incident response)
+def test_cli_force_reset_and_verify_audit(factory, db, capsys):
+    from app import cli
+    u = factory.user("forceme")
+    assert cli.main(["force-reset", "--handle", "forceme"]) == 0
+    assert u.get("/api/v1/auth/session").json()["authenticated"] is False
+    r = factory.anon().post("/api/v1/auth/login", headers={"Origin": "https://testserver"},
+                            json={"identifier": "forceme", "password": u.password})
+    assert r.status_code == 401
+    assert cli.main(["verify-audit"]) == 0
+    assert "OK" in capsys.readouterr().out
+
+
+def test_cli_revoke_all_sessions(factory):
+    from app import cli
+    a, b = factory.user(), factory.user()
+    assert cli.main(["revoke-all-sessions"]) == 0
+    assert a.get("/api/v1/auth/session").json()["authenticated"] is False
+    assert b.get("/api/v1/auth/session").json()["authenticated"] is False
+
+
+def test_cli_media_rescan_withdraws_tampered_derivative(factory, db):
+    import io
+    import os
+
+    from PIL import Image
+    from sqlalchemy import create_engine
+
+    from app import cli, media_store
+    from app.models import Media
+    from app.worker import process_one
+    u = factory.user()
+    b = io.BytesIO()
+    Image.new("RGB", (8, 8)).save(b, "PNG")
+    mid = u.client.post("/api/v1/media?purpose=post", content=b.getvalue(),
+                        headers={"Origin": "https://testserver", "X-CSRF-Token": u.csrf}).json()["id"]
+    eng = create_engine(os.environ["WORKER_DATABASE_URL"])
+    process_one(eng)
+    eng.dispose()
+    assert cli.main(["media-rescan"]) == 0
+    m = db.get(Media, __import__("uuid").UUID(mid))
+    media_store.safe_path("store", m.variants["large"]["key"]).write_bytes(b"<script>alert(1)</script>")
+    assert cli.main(["media-rescan"]) == 1
+    db.expire_all()
+    assert db.get(Media, m.id).state == "failed"
+    assert u.get(f"/api/v1/media/{mid}/large").status_code == 404
+
+
+def test_cli_outbox_refused_in_production(monkeypatch, capsys):
+    from app import cli, config
+    prod = config.Settings(**{**config.get_settings().__dict__, "env": "production"})
+    monkeypatch.setattr(config, "get_settings", lambda: prod)
+    assert cli.outbox() == 2
+
+
+def test_cli_purge_enforces_retention(factory, db):
+    from datetime import datetime, timedelta, timezone
+
+    from sqlalchemy import select, update
+
+    from app import cli
+    from app.models import Session as S
+    from app.models import User
+    u = factory.user("purgeme")
+    u.reauth()
+    u.post("/api/v1/account/delete", json={"confirm_handle": "purgeme"})
+    old = datetime.now(timezone.utc) - timedelta(days=100)
+    db.execute(update(User).where(User.id == u.id).values(purge_after=datetime.now(timezone.utc) - timedelta(seconds=1)))
+    db.execute(update(S).where(S.user_id == u.id).values(revoked_at=old))
+    db.commit()
+    assert cli.main(["purge"]) == 0
+    db.expire_all()
+    assert db.get(User, u.id) is None  # hard-deleted, cascades removed owned rows
+    assert db.scalar(select(S).where(S.user_id == u.id)) is None

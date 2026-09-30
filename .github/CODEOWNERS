@@ -1,0 +1,14 @@
+# Security-sensitive paths require review from the security owners.
+*                                   @bastion/maintainers
+/backend/app/authz.py               @bastion/security
+/backend/app/deps.py                @bastion/security
+/backend/app/middleware.py          @bastion/security
+/backend/app/strictjson.py          @bastion/security
+/backend/app/services/sessions.py   @bastion/security
+/backend/app/services/passkeys.py   @bastion/security
+/backend/app/media_process.py       @bastion/security
+/backend/app/worker.py              @bastion/security
+/backend/migrations/                @bastion/security
+/deploy/                            @bastion/security
+/.github/                           @bastion/security
+/frontend/assets/vendor/            @bastion/security
