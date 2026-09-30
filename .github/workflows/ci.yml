@@ -197,7 +197,7 @@ jobs:
       - name: Image runs as non-root
         run: test "$(docker image inspect bastion-${{ matrix.image.name }}:ci -f '{{.Config.User}}')" != "" && test "$(docker image inspect bastion-${{ matrix.image.name }}:ci -f '{{.Config.User}}')" != "root"
       - name: Trivy image scan (fail on fixable HIGH/CRITICAL)
-        uses: aquasecurity/trivy-action@a9c7b0f06e461e9d4b4d1711f154ee024b8d7ab8 # v0.36.0
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
         with:
           image-ref: bastion-${{ matrix.image.name }}:ci
           severity: CRITICAL,HIGH
@@ -205,7 +205,7 @@ jobs:
           exit-code: "1"
           vuln-type: os,library
       - name: Image SBOM (CycloneDX)
-        uses: aquasecurity/trivy-action@a9c7b0f06e461e9d4b4d1711f154ee024b8d7ab8 # v0.36.0
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
         with:
           image-ref: bastion-${{ matrix.image.name }}:ci
           format: cyclonedx
@@ -219,7 +219,7 @@ jobs:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with: { persist-credentials: false }
       - name: Trivy config scan (Dockerfiles, compose, nginx) — fail on HIGH/CRITICAL misconfig
-        uses: aquasecurity/trivy-action@a9c7b0f06e461e9d4b4d1711f154ee024b8d7ab8 # v0.36.0
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
         with:
           scan-type: config
           scan-ref: .
