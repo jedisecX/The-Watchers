@@ -269,7 +269,8 @@ class SecurityHeadersMiddleware:
             if msg["type"] == "http.response.start":
                 headers = [(k, v) for k, v in msg.get("headers", []) if k.lower() not in {b"server"}]
                 names = {k.lower() for k, _ in headers}
-                headers.extend(self.common)
+                # A route may set a stricter value (e.g. media CSP); never duplicate or weaken it.
+                headers.extend((k, v) for k, v in self.common if k not in names)
                 if b"content-security-policy" not in names:
                     headers.append((b"content-security-policy", self.api_csp if is_api else self.front_csp))
                 if is_api and b"cache-control" not in names:

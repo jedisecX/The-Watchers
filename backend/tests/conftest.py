@@ -74,6 +74,10 @@ def _clean(migrator_engine):
         c.execute(text("ALTER TABLE audit_log DISABLE TRIGGER audit_log_no_truncate"))
         c.execute(text(f"TRUNCATE {', '.join(TABLES)} RESTART IDENTITY CASCADE"))
         c.execute(text("ALTER TABLE audit_log ENABLE TRIGGER audit_log_no_truncate"))
+    import shutil
+    for d in ("quarantine", "media"):
+        shutil.rmtree(TMP / d, ignore_errors=True)
+        (TMP / d).mkdir(parents=True, exist_ok=True)
     from app.ratelimit import fallback_limiter, get_limiter
     get_limiter().reset()
     fallback_limiter().reset()

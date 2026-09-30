@@ -6,7 +6,7 @@ requires-python = ">=3.11"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-addopts = "-q -p no:cacheprovider"
+addopts = "-p no:cacheprovider"
 filterwarnings = [
   "ignore::DeprecationWarning",
   "ignore:.*httpx.*:Warning",

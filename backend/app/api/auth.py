@@ -261,6 +261,11 @@ def login(body: LoginIn, request: Request, response: Response, p: Principal = De
             db.commit()
         sec_event("auth.login_failed", ip_prefix=p.ip_prefix, user_id=str(user.id) if user else None)
         raise INVALID_CREDENTIALS
+    if user.status == "suspended" and user.suspended_until is not None \
+            and user.suspended_until <= datetime.now(timezone.utc):
+        user.status, user.suspended_until = "active", None  # timed suspension has elapsed
+        audit.record(db, action="mod.suspension_expired", actor_id=None, actor_role="system",
+                     target_type="user", target_id=user.id)
     if user.status == "suspended":
         # Only revealed after a correct password, so this is not an enumeration oracle.
         raise ApiError(403, "account_suspended", "This account is suspended.")
