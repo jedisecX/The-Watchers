@@ -93,6 +93,24 @@ def install(app: FastAPI) -> None:
             status_code=422,
         )
 
+    from sqlalchemy.exc import DataError, IntegrityError, OperationalError
+
+    @app.exception_handler(IntegrityError)
+    async def _integrity(request: Request, exc: IntegrityError):
+        # A constraint caught a race or invalid state that application checks missed: the DB did its job.
+        log.warning("db.integrity_conflict", extra={"event": "db.integrity_conflict", "path": request.url.path})
+        return error_response(request, 409, "conflict", "The request conflicts with the current state. Retry.")
+
+    @app.exception_handler(DataError)
+    async def _data(request: Request, exc: DataError):
+        log.warning("db.data_error", extra={"event": "db.data_error", "path": request.url.path})
+        return error_response(request, 400, "bad_request", "Invalid value.")
+
+    @app.exception_handler(OperationalError)
+    async def _operational(request: Request, exc: OperationalError):
+        log.error("db.operational_error", extra={"event": "db.operational_error", "path": request.url.path})
+        return error_response(request, 503, "temporarily_unavailable", "Service temporarily unavailable.")
+
     @app.exception_handler(Exception)
     async def _unhandled(request: Request, exc: Exception):
         log.error("unhandled_exception", exc_info=exc, extra={"event": "http.unhandled", "path": request.url.path})

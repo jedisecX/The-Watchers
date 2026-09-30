@@ -128,7 +128,10 @@ def csrf_protect(request: Request, p: Principal = Depends(get_principal)) -> Pri
 
 
 def principal(p: Principal = Depends(csrf_protect)) -> Principal:
-    """The dependency handlers use: principal with CSRF already enforced."""
+    """The dependency handlers use: principal with CSRF already enforced, plus the baseline ``api``
+    budget, so no endpoint can ever be called without *some* rate limit (finding ADV-10b)."""
+    key = str(p.user_id) if p.user_id else f"ip:{p.rl_ip}"
+    enforce_limit("api", key, trust_tier(p.user))
     return p
 
 

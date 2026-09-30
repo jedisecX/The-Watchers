@@ -181,7 +181,8 @@ class BodyLimitMiddleware:
 
 
 class QueryPollutionMiddleware:
-    """Rejects duplicate query keys (HTTP parameter pollution) and oversized query strings."""
+    """Rejects duplicate query keys (HTTP parameter pollution), oversized query strings, and control
+    characters in the path or query."""
 
     MAX_QS = 2048
 
@@ -193,6 +194,20 @@ class QueryPollutionMiddleware:
             return await self.app(scope, receive, send)
         qs = scope.get("query_string", b"")
         rid = scope.get("state", {}).get("request_id", "")
+        path = scope.get("path", "")
+        # Control characters (incl. NUL) in the decoded path are never legitimate; Postgres also
+        # rejects NUL in text, so letting them through would turn into 500s (finding ADV-01).
+        if any(ord(ch) < 0x20 or ord(ch) == 0x7F for ch in path):
+            if scope["type"] == "websocket":
+                return await send({"type": "websocket.close", "code": 1008})
+            return await _send_json(send, 400, "bad_request", "Invalid characters in path.", rid)
+        # Strict routing for APIs: one canonical path per resource. A tolerated trailing slash or
+        # duplicate slash would let /admin/api/v1/me/ slip past proxy/CDN rules written for
+        # /admin/api/v1/me (path-normalisation differential, finding ADV-03).
+        if (path.startswith("/api/") or path.startswith("/admin/api/")) and (path.endswith("/") or "//" in path):
+            if scope["type"] == "websocket":
+                return await send({"type": "websocket.close", "code": 1008})
+            return await _send_json(send, 404, "not_found", "Resource not found.", rid)
         if len(qs) > self.MAX_QS:
             if scope["type"] == "websocket":
                 return await send({"type": "websocket.close", "code": 1008})
@@ -203,7 +218,8 @@ class QueryPollutionMiddleware:
             except UnicodeDecodeError:
                 pairs = None
             keys = [k for k, _ in pairs] if pairs is not None else None
-            if keys is None or len(keys) != len(set(keys)) or any("\x00" in k or "\x00" in v for k, v in pairs):
+            if keys is None or len(keys) != len(set(keys)) or any(
+                    any(ord(ch) < 0x20 and ch not in "\t" for ch in k + v) for k, v in pairs):
                 if scope["type"] == "websocket":
                     return await send({"type": "websocket.close", "code": 1008})
                 return await _send_json(send, 400, "duplicate_parameter", "Duplicate or invalid query parameters.", rid)

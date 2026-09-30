@@ -230,7 +230,7 @@ def test_variant_traversal(factory, worker_engine, variant):
     u = factory.user()
     mid = upload(u, png_bytes()).json()["id"]
     run_worker(worker_engine)
-    assert u.get(f"/api/v1/media/{mid}/{variant}").status_code == 404
+    assert u.get(f"/api/v1/media/{mid}/{variant}").status_code in (400, 404)  # NUL is rejected at the edge
 
 
 def test_safe_path_refuses_escape():

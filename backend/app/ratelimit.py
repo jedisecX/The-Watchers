@@ -164,6 +164,7 @@ BUCKETS: dict[str, dict[str, tuple[int, int]]] = {
     "login_account_ip": {"*": (10, 900)},   # identifier+IP: stops single-source guessing
     "login_account": {"*": (50, 3600)},     # identifier across all IPs: slows distributed stuffing
     "mfa_verify": {"*": (10, 300)},
+    "mfa_user": {"*": (20, 3600)},          # per account, all IPs: caps distributed TOTP guessing (ADV-06b)
     "register_ip": {"*": (5, 3600)},
     "reset_ip": {"*": (5, 3600)},
     "reset_account": {"*": (3, 3600)},
@@ -186,6 +187,8 @@ BUCKETS: dict[str, dict[str, tuple[int, int]]] = {
     "token_create": {"*": (10, 3600)},
     "ws_ticket": {"*": (30, 60)},
     "ws_connect_ip": {"*": (60, 60)},
+    # baseline for EVERY request that resolves a principal (ADV-10b): no endpoint is ever unlimited
+    "api": {"anon": (300, 60), "new": (300, 60), "basic": (600, 60), "established": (1200, 60)},
     # reads
     "read": {"anon": (120, 60), "new": (300, 60), "basic": (600, 60), "established": (1200, 60)},
     "search": {"anon": (0, 60), "new": (20, 60), "basic": (60, 60), "established": (120, 60)},
@@ -194,8 +197,8 @@ BUCKETS: dict[str, dict[str, tuple[int, int]]] = {
     "admin": {"*": (300, 60)},
 }
 
-FAIL_CLOSED = {"login_ip", "login_account", "login_account_ip", "mfa_verify", "register_ip", "reset_ip", "reset_account",
-               "verify_email", "resend_verify", "reauth", "passkey_login"}
+FAIL_CLOSED = {"login_ip", "login_account", "login_account_ip", "mfa_verify", "mfa_user", "register_ip",
+               "reset_ip", "reset_account", "verify_email", "resend_verify", "reauth", "passkey_login"}
 
 
 def limits_for(bucket: str, tier: str) -> tuple[int, int]:

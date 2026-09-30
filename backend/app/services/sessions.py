@@ -127,3 +127,12 @@ def cookie_kwargs(max_age: int) -> dict:
         "httponly": True,
         "samesite": "lax",
     }
+
+
+def announce_revocation(user_id: uuid.UUID, except_session_id: uuid.UUID | None = None) -> None:
+    """Close the user's live sockets now (call AFTER commit). Without this they would survive until
+    the gateway's periodic revalidation (finding ADV-04)."""
+    from ..realtime import broker
+
+    broker.publish_control({"type": "user_sessions_revoked", "user_id": str(user_id),
+                            "except_session_id": str(except_session_id) if except_session_id else None})

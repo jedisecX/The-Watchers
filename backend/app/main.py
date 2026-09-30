@@ -34,6 +34,7 @@ def create_app() -> FastAPI:
 
     app = FastAPI(
         lifespan=lifespan,
+        redirect_slashes=False,  # never emit automatic redirects (unsafe-redirect / cache-key surface)
         title="Bastion API",
         version="1.0.0",
         # Interactive docs are off in production (reduces surface; the OpenAPI JSON is published in docs/).
@@ -57,6 +58,7 @@ def create_app() -> FastAPI:
         app.include_router(m.router)
 
     @app.api_route("/api/{rest:path}", methods=["GET", "POST", "PUT", "PATCH", "DELETE"], include_in_schema=False)
+    @app.api_route("/admin/api/{rest:path}", methods=["GET", "POST", "PUT", "PATCH", "DELETE"], include_in_schema=False)
     def api_404(rest: str):
         # Unknown API paths get a JSON 404 and never fall through to the SPA (T-6 cache deception).
         return JSONResponse({"error": {"code": "not_found", "message": "Resource not found.", "request_id": ""}},

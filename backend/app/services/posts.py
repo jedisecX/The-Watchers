@@ -91,6 +91,9 @@ def create_post(db: Session, author: User, text: str, visibility: str | None, re
         ok = {m.id: m for m in media if m.owner_id == author.id and m.purpose == "post" and m.state == "ready"}
         if len(ok) != len(media_ids):
             raise not_found("Media")  # also covers "someone else's media" (no existence oracle)
+        # Checked *after* taking the row locks, so two concurrent posts cannot both claim one upload (ADV-05b).
+        if db.scalar(select(func.count()).select_from(PostMedia).where(PostMedia.media_id.in_(media_ids))):
+            raise not_found("Media")
         media = [ok[i] for i in media_ids]
 
     post = Post(author_id=author.id, body=parsed.text, entities={"segments": parsed.segments}, visibility=vis,

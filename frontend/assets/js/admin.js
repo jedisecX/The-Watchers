@@ -62,7 +62,7 @@ async function reportsTab(status = "open") {
         h("span", { class: "muted" }, `${it.open_reports_on_target} open report(s) on target`)),
       h("div", { class: "muted small" }, `Reporter @${it.reporter.handle} (tier ${it.reporter.trust_tier})`),
       it.details ? h("p", null, "Reporter note: ", it.details) : null,
-      h("blockquote", { class: "evidence" }, it.evidence.text ?? it.evidence.bio ?? JSON.stringify(it.evidence)),
+      h("blockquote", { class: "evidence" }, it.evidence.text ?? (it.evidence.bio || `@${it.evidence.handle ?? "?"} (no bio)`)),
       it.target_user ? userCard(it.target_user) : null,
       it.status === "open" ? h("div", { class: "row" },
         it.target_type === "post" ? button("Remove post", async () => {

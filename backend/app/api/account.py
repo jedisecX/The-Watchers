@@ -21,15 +21,15 @@ from __future__ import annotations
 
 import uuid
 from datetime import datetime, timedelta, timezone
-from typing import Any, Literal
+from typing import Annotated, Any, Literal
 
 from fastapi import APIRouter, Depends, Request, Response
-from pydantic import Field, StrictBool
+from pydantic import Field, StrictBool, StrictInt
 from sqlalchemy import delete, exists, func, select, update
 from sqlalchemy.orm import Session
 
 from .. import audit
-from ..authz import PAT_SCOPES, Principal, require_recent_reauth, require_session
+from ..authz import PAT_SCOPES, Principal, require, require_recent_reauth, require_session
 from ..config import get_settings
 from ..db import get_db
 from ..deps import PAT_PREFIX, StrictRoute, enforce_limit, principal
@@ -51,7 +51,7 @@ from ..models import (
     WebAuthnCredential,
 )
 from ..models import Session as DbSession
-from ..schemas import In
+from ..schemas import In, PosInt32
 from ..security.crypto import random_token, token_hash
 from ..security.passwords import PasswordPolicyError, check_password_policy, hash_password, verify_password
 from ..serializers import iso, user_self
@@ -72,6 +72,15 @@ def _reauthed(p: Principal) -> None:
     require_recent_reauth(p, get_settings().stepup_minutes)
 
 
+def _reauthed_verified(p: Principal) -> None:
+    """Adding long-lived credentials (MFA, passkeys, API tokens) requires a *verified* email.
+    Otherwise an attacker could pre-register a victim's address and plant credentials that survive
+    the victim later claiming the account (account pre-hijacking, finding ADV-02)."""
+    _reauthed(p)
+    if p.user is None or p.user.email_verified_at is None:
+        raise ApiError(403, "email_unverified", "Verify your email address before adding sign-in methods or tokens.")
+
+
 def _audit(db: Session, p: Principal, action: str, **details: Any) -> None:
     audit.record(db, action=action, actor_id=p.user_id, actor_role=p.role, target_type="user",
                  target_id=p.user_id or "", ip_prefix=p.ip_prefix, request_id=p.request_id, details=details)
@@ -79,7 +88,7 @@ def _audit(db: Session, p: Principal, action: str, **details: Any) -> None:
 
 # =========================================================================== profile & settings
 class MeUpdateIn(In):
-    version: int = Field(ge=1)
+    version: PosInt32
     display_name: str | None = Field(default=None, max_length=100)
     bio: str | None = Field(default=None, max_length=600)
     avatar_media_id: uuid.UUID | None = None
@@ -95,6 +104,7 @@ class MeUpdateIn(In):
 def get_me(p: Principal = Depends(principal), db: Session = Depends(get_db)):
     if not p.user:
         raise ApiError(401, "unauthenticated", "Authentication required.")
+    require(p, "read:auth")  # a PAT must carry the read scope (ADV-07b)
     has_pk = bool(db.scalar(select(exists().where(WebAuthnCredential.user_id == p.user.id))))
     return user_self(p.user, has_passkeys=has_pk)
 
@@ -177,6 +187,7 @@ def change_password(body: PasswordChangeIn, request: Request, response: Response
     _audit(db, p, "account.password_changed")
     mailer.security_notice(db, p.user.email, "Your Bastion password was changed and other sessions were signed out.")
     db.commit()
+    sessions.announce_revocation(p.user.id, except_session_id=sess.id)
     response.set_cookie(value=token, **sessions.cookie_kwargs(get_settings().session_absolute_days * 86400))
     return {"status": "password_changed", "csrf_token": sessions.csrf_token(sess)}
 
@@ -206,7 +217,7 @@ class CodeIn(In):
 
 @router.post("/api/v1/account/mfa/totp/setup")
 def totp_setup(p: Principal = Depends(principal), db: Session = Depends(get_db)):
-    _reauthed(p)
+    _reauthed_verified(p)
     ensure(p.user is not None)
     if p.user.mfa_enabled_at is not None:
         raise ApiError(409, "mfa_already_enabled", "Two-factor authentication is already enabled.")
@@ -218,7 +229,7 @@ def totp_setup(p: Principal = Depends(principal), db: Session = Depends(get_db))
 
 @router.post("/api/v1/account/mfa/totp/enable")
 def totp_enable(body: CodeIn, p: Principal = Depends(principal), db: Session = Depends(get_db)):
-    _reauthed(p)
+    _reauthed_verified(p)
     ensure(p.user is not None and p.session is not None)
     enforce_limit("mfa_verify", f"user:{p.user_id}", "anon")
     if p.user.mfa_enabled_at is not None or p.user.totp_pending_enc is None:
@@ -281,7 +292,7 @@ class PasskeyRegisterFinishIn(In):
 
 @router.post("/api/v1/account/passkeys/register/begin")
 def passkey_register_begin(p: Principal = Depends(principal), db: Session = Depends(get_db)):
-    _reauthed(p)
+    _reauthed_verified(p)
     ensure(p.user is not None)
     enforce_limit("settings", str(p.user_id), "anon")
     out = passkeys.begin_registration(db, p.user)
@@ -292,7 +303,7 @@ def passkey_register_begin(p: Principal = Depends(principal), db: Session = Depe
 @router.post("/api/v1/account/passkeys/register/finish", status_code=201)
 def passkey_register_finish(body: PasskeyRegisterFinishIn, p: Principal = Depends(principal),
                             db: Session = Depends(get_db)):
-    _reauthed(p)
+    _reauthed_verified(p)
     ensure(p.user is not None)
     cred = passkeys.finish_registration(db, p.user, body.challenge_id, body.credential,
                                         normalize(body.name, multiline=False)[:50] or "Passkey")
@@ -370,7 +381,7 @@ def session_revoke_others(p: Principal = Depends(principal), db: Session = Depen
 class TokenCreateIn(In):
     name: str = Field(min_length=1, max_length=50)
     scopes: list[Literal["read", "write", "dm"]] = Field(min_length=1, max_length=3)
-    expires_in_days: int = Field(default=90, ge=1, le=365)
+    expires_in_days: Annotated[StrictInt, Field(ge=1, le=365)] = 90
 
 
 @router.get("/api/v1/account/tokens")
@@ -385,7 +396,7 @@ def token_list(p: Principal = Depends(principal), db: Session = Depends(get_db))
 
 @router.post("/api/v1/account/tokens", status_code=201)
 def token_create(body: TokenCreateIn, p: Principal = Depends(principal), db: Session = Depends(get_db)):
-    _reauthed(p)
+    _reauthed_verified(p)
     ensure(p.user is not None)
     enforce_limit("token_create", str(p.user_id), "anon")
     active = db.scalar(select(func.count()).select_from(ApiToken).where(

@@ -21,10 +21,10 @@ from __future__ import annotations
 
 import uuid
 from datetime import datetime, timedelta, timezone
-from typing import Literal
+from typing import Annotated, Literal
 
 from fastapi import APIRouter, Depends, Query, Response
-from pydantic import Field
+from pydantic import Field, StrictInt
 from sqlalchemy import delete, func, select, update
 from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy.orm import Session, aliased
@@ -141,6 +141,10 @@ def remove_post(post_id: uuid.UUID, body: Reason, p: Principal = Depends(staff("
 @router.post("/posts/{post_id}/restore")
 def restore_post(post_id: uuid.UUID, body: Reason, p: Principal = Depends(staff("mod:content")),
                  db: Session = Depends(get_db)):
+    post = db.get(Post, post_id)
+    author = db.get(User, post.author_id) if post else None
+    if author and author.id != p.user_id and not can_moderate_target(p.user, author):
+        raise ApiError(403, "insufficient_rank", "You cannot act on this account's content.")  # ADV-08b
     res = db.execute(update(Post).where(Post.id == post_id, Post.removed_at.is_not(None)).values(removed_at=None)
                      .returning(Post.id))
     if res.first() is None:
@@ -188,7 +192,7 @@ def warn(user_id: uuid.UUID, body: Reason, p: Principal = Depends(staff("mod:use
 
 
 class SuspendIn(ConfirmedReason):
-    days: int | None = Field(default=None, ge=1, le=3650)
+    days: Annotated[StrictInt, Field(ge=1, le=3650)] | None = None
 
 
 @router.post("/users/{user_id}/suspend")
@@ -303,7 +307,7 @@ def remove_domain(domain: str, p: Principal = Depends(staff("admin:domains")), d
 # =========================================================================== audit
 @router.get("/audit")
 def audit_log(action: str | None = Query(default=None, max_length=64), actor_id: uuid.UUID | None = None,
-              before_seq: int | None = Query(default=None, ge=1), limit: int = Query(default=50, ge=1, le=200),
+              before_seq: int | None = Query(default=None, ge=1, le=2**62), limit: int = Query(default=50, ge=1, le=200),
               p: Principal = Depends(staff("admin:audit")), db: Session = Depends(get_db)):
     q = select(AuditLog)
     if action:

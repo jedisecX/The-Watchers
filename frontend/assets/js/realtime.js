@@ -57,8 +57,15 @@ function connect() {
   });
   ws.addEventListener("close", (e) => {
     clearInterval(pingTimer);
-    if (stopped || e.code === 4001 || e.code === 4003) {  // revoked / disabled: don't hammer the server
-      if (e.code === 4001 || e.code === 4003) listeners.forEach((fn) => fn({ type: "session_ended" }));
+    if (stopped) return;
+    if (e.code === 4003) { listeners.forEach((fn) => fn({ type: "session_ended" })); return; }
+    if (e.code === 4001) {
+      // Our session was revoked. If this tab rotated to a new session (e.g. password change), resume;
+      // otherwise we were signed out elsewhere.
+      fetch("/api/v1/auth/session", { credentials: "same-origin", cache: "no-store" })
+        .then((r) => r.json())
+        .then((s) => (s.authenticated ? setTimeout(connect, 500) : listeners.forEach((fn) => fn({ type: "session_ended" }))))
+        .catch(() => setTimeout(connect, backoff));
       return;
     }
     setTimeout(connect, backoff + Math.random() * 500);

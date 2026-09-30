@@ -23,7 +23,7 @@ from typing import Any
 from email_validator import EmailNotValidError, validate_email
 from fastapi import APIRouter, Depends, Request, Response
 from pydantic import Field
-from sqlalchemy import exists, select, update
+from sqlalchemy import delete, exists, select, update
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
@@ -34,8 +34,8 @@ from ..db import get_db
 from ..deps import StrictRoute, enforce_limit, principal
 from ..errors import ApiError, ensure
 from ..logging_setup import sec_event
+from ..models import ApiToken, RecoveryCode, User, WebAuthnCredential
 from ..models import Session as DbSession
-from ..models import User, WebAuthnCredential
 from ..schemas import In
 from ..security.crypto import sha256
 from ..security.passwords import (
@@ -287,6 +287,7 @@ def login_mfa(body: MfaIn, request: Request, response: Response, p: Principal = 
     if pending is None or pending.user_id is None:
         raise ApiError(401, "mfa_token_invalid", "Sign-in expired. Start again.")
     enforce_limit("mfa_verify", f"user:{pending.user_id}", "anon")
+    enforce_limit("mfa_user", str(pending.user_id), "anon")
     user = db.get(User, pending.user_id)
     if user is None or user.status != "active" or user.deleted_at is not None:
         raise ApiError(401, "mfa_token_invalid", "Sign-in expired. Start again.")
@@ -394,16 +395,29 @@ def reset_confirm(body: ResetConfirmIn, p: Principal = Depends(principal), db: S
     if tokens.consume(db, "password_reset", body.token) is None:
         raise ApiError(400, "token_invalid", "This link is invalid or has expired.")
     now = datetime.now(timezone.utc)
+    was_unverified = user.email_verified_at is None
     db.execute(update(User).where(User.id == user.id).values(
         password_hash=new_hash, password_changed_at=now, failed_login_count=0, updated_at=now,
         # Clicking the emailed link also proves control of the address.
         email_verified_at=user.email_verified_at or now))
+    if was_unverified:
+        # First-ever proof of email control: whoever set this account up before never proved they own the
+        # address, so every credential they created is discarded (account pre-hijacking, ADV-02).
+        db.execute(update(User).where(User.id == user.id).values(
+            totp_secret_enc=None, totp_pending_enc=None, mfa_enabled_at=None, totp_last_step=0))
+        db.execute(delete(RecoveryCode).where(RecoveryCode.user_id == user.id))
+        db.execute(delete(WebAuthnCredential).where(WebAuthnCredential.user_id == user.id))
+        db.execute(update(ApiToken).where(ApiToken.user_id == user.id, ApiToken.revoked_at.is_(None))
+                   .values(revoked_at=now))
+        audit.record(db, action="account.prehijack_cleanup", actor_id=user.id, target_type="user",
+                     target_id=user.id, ip_prefix=p.ip_prefix, request_id=p.request_id)
     # Revoke every session and API token. MFA is deliberately left untouched (S-4d).
     sessions.bump_epoch(db, user.id)
     audit.record(db, action="account.password_reset", actor_id=user.id, target_type="user", target_id=user.id,
                  ip_prefix=p.ip_prefix, request_id=p.request_id)
     mailer.security_notice(db, user.email, "Your Bastion password was reset and all sessions were signed out.")
     db.commit()
+    sessions.announce_revocation(user.id)
     return {"status": "password_reset"}
 
 

@@ -51,6 +51,8 @@ def _no_surrogates(obj: Any) -> None:
     while stack:
         cur = stack.pop()
         if isinstance(cur, str):
+            if "\x00" in cur:  # never meaningful, and unstorable in Postgres text (finding ADV-01)
+                raise StrictJSONError("nul_byte")
             try:
                 cur.encode("utf-8")
             except UnicodeEncodeError as exc:

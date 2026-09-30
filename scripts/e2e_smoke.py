@@ -15,6 +15,7 @@ import sys
 import time
 import uuid
 
+import pyotp
 from PIL import Image
 from playwright.sync_api import sync_playwright
 from sqlalchemy import create_engine, text
@@ -32,6 +33,27 @@ def verify_link(engine, email: str) -> str:
                 return re.search(r"(http\S+/verify-email#token=\S+)", body).group(1)
             time.sleep(0.2)
     raise AssertionError("no verification mail")
+
+
+def create_admin(engine, suffix: str) -> tuple[str, str]:
+    """Development helper: an admin with TOTP enrolled (the admin API refuses staff without MFA)."""
+    sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "backend"))
+    from app.db import new_session
+    from app.models import User
+    from app.security.passwords import hash_password
+    from app.services import mfa as mfasvc
+    from datetime import datetime, timezone
+    handle, secret = f"admin_{suffix}", pyotp.random_base32(32)
+    db = new_session()
+    u = User(handle=handle, handle_norm=handle, email=f"{handle}@example.com", password_hash=hash_password(PW),
+             role="admin", email_verified_at=datetime.now(timezone.utc))
+    db.add(u)
+    db.flush()
+    u.totp_secret_enc = mfasvc.enc(u.id, secret)
+    u.mfa_enabled_at = datetime.now(timezone.utc)
+    db.commit()
+    db.close()
+    return handle, secret
 
 
 def main() -> int:
@@ -142,6 +164,30 @@ def main() -> int:
         pa.goto(f"{a.base}/admin")
         pa.wait_for_selector("text=You are not allowed", timeout=10000)
         print("✓ admin console refuses a regular user (server-side 403)")
+
+        # --- moderation console as an MFA-enabled admin: report → reports queue → audit chain
+        pb.goto(f"{a.base}/@{alice}")
+        pb.click("button:has-text('Report')")
+        pb.select_option("dialog select", "spam")
+        pb.click("dialog button:has-text('Submit report')")
+        pb.wait_for_selector("text=Thanks")
+        admin_handle, secret = create_admin(eng, suffix)
+        pm = new_page()
+        pm.goto(f"{a.base}/login")
+        pm.fill("input[autocomplete=username]", admin_handle)
+        pm.fill("input[type=password]", PW)
+        pm.click("button[type=submit]")
+        pm.wait_for_selector("text=Two-factor authentication")
+        pm.fill("input[autocomplete=one-time-code]", pyotp.TOTP(secret).now())
+        pm.click("button:has-text('Verify')")
+        pm.wait_for_selector("h1:has-text('Home')")
+        pm.goto(f"{a.base}/admin")
+        pm.wait_for_selector(f"article.card:has-text('@{bob}')", timeout=10000)
+        pm.screenshot(path=f"{a.shots}/admin-reports.png", full_page=True)
+        pm.click("button:has-text('Audit log')")
+        pm.wait_for_selector("text=Hash chain intact", timeout=10000)
+        pm.screenshot(path=f"{a.shots}/admin-audit.png")
+        print("✓ admin console (MFA login, reports queue, audit hash-chain verification)")
 
         pb.goto(f"{a.base}/explore")
         pb.wait_for_selector("article.post")

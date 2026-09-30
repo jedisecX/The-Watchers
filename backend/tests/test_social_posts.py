@@ -58,8 +58,10 @@ def test_unsafe_links_never_become_link_entities(factory, url):
 
 def test_invisible_and_bidi_characters_stripped(factory):
     a = factory.user()
-    p = _post(a, "safe‮txt.exe​ and ⁦x⁩ \x00\x07ok")
-    assert "‮" not in p["text"] and "​" not in p["text"] and "\x00" not in p["text"]
+    p = _post(a, "safe\u202etxt.exe\u200b and \u2066x\u2069 \x07\x1bok")
+    assert "\u202e" not in p["text"] and "\u200b" not in p["text"] and "\x07" not in p["text"] and "\x1b" not in p["text"]
+    # NUL is rejected outright at the JSON boundary (ADV-01)
+    assert a.post("/api/v1/posts", json={"text": "a\x00b"}).status_code == 400
 
 
 def test_post_length_enforced_after_normalisation(factory):

@@ -175,7 +175,7 @@ def send_message(conversation_id: uuid.UUID, body: MessageIn, p: Principal = Dep
             raise ApiError(400, exc.code, exc.message) from exc
     media = None
     if body.media_id is not None:
-        media = db.get(Media, body.media_id)
+        media = db.execute(select(Media).where(Media.id == body.media_id).with_for_update()).scalar_one_or_none()
         if media is None or media.owner_id != p.user.id or media.purpose != "dm" or media.state != "ready":
             raise not_found("Media")
         if db.scalar(select(exists().where(Message.media_id == media.id))):
