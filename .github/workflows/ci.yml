@@ -80,7 +80,7 @@ jobs:
         run: cd backend && pip-audit -r requirements.txt --require-hashes --strict --progress-spinner off
       - name: SBOM (CycloneDX, Python)
         run: cd backend && cyclonedx-py requirements requirements.txt -o ../sbom-python.cdx.json
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with: { name: sbom-python, path: sbom-python.cdx.json }
 
   dependency-review:
@@ -124,7 +124,7 @@ jobs:
       - name: Full test suite (authn, authz matrix, injection, uploads, API, realtime, business logic, adversarial)
         working-directory: backend
         run: python -m pytest tests -p no:cacheprovider --junitxml=../junit.xml
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         if: always()
         with: { name: junit, path: junit.xml }
 
@@ -166,7 +166,7 @@ jobs:
           for i in $(seq 1 30); do curl -sf localhost:8000/api/v1/health && break; sleep 1; done
       - name: E2E (fails on any console error or CSP / Trusted Types violation)
         run: python scripts/e2e_smoke.py --shots e2e-shots
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         if: always()
         with: { name: e2e-screenshots, path: e2e-shots }
 
@@ -210,7 +210,7 @@ jobs:
           image-ref: bastion-${{ matrix.image.name }}:ci
           format: cyclonedx
           output: sbom-${{ matrix.image.name }}.cdx.json
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with: { name: "sbom-image-${{ matrix.image.name }}", path: "sbom-${{ matrix.image.name }}.cdx.json" }
 
   iac-scan:
