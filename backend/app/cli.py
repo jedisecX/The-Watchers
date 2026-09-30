@@ -9,6 +9,7 @@
   mail-loop                             deliver the email outbox continuously
   reencrypt                             re-encrypt TOTP secrets with the primary field key (rotation)
   recount                               recompute denormalised counters
+  outbox                                (development only) print recent outgoing mail
 """
 from __future__ import annotations
 
@@ -80,6 +81,18 @@ def purge() -> int:
     return 0
 
 
+def outbox() -> int:
+    """Development only: show recent outbox mail (e.g. verification links). Refused in production."""
+    from .config import get_settings
+    if get_settings().is_production:
+        print("refused: outbox dump is disabled in production", file=sys.stderr)
+        return 2
+    db = new_session()
+    for m in db.execute(select(EmailOutbox).order_by(EmailOutbox.created_at.desc()).limit(5)).scalars():
+        print(f"--- {m.created_at:%H:%M:%S} to={m.to_addr} subject={m.subject}\n{m.body}")
+    return 0
+
+
 def mail_loop() -> int:
     while True:
         db = new_session()
@@ -122,13 +135,13 @@ def main(argv: list[str] | None = None) -> int:
     c = sub.add_parser("create-admin")
     c.add_argument("--handle", required=True)
     c.add_argument("--email", required=True)
-    for name in ("verify-audit", "revoke-all-sessions", "purge", "mail-loop", "reencrypt", "recount"):
+    for name in ("verify-audit", "revoke-all-sessions", "purge", "mail-loop", "reencrypt", "recount", "outbox"):
         sub.add_parser(name)
     a = ap.parse_args(argv)
     return {
         "create-admin": lambda: create_admin(a.handle, a.email),
         "verify-audit": verify_audit, "revoke-all-sessions": revoke_all, "purge": purge,
-        "mail-loop": mail_loop, "reencrypt": reencrypt, "recount": recount,
+        "mail-loop": mail_loop, "reencrypt": reencrypt, "recount": recount, "outbox": outbox,
     }[a.cmd]()
 
 

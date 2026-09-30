@@ -15,7 +15,6 @@ from typing import Literal
 
 from fastapi import APIRouter, Depends
 from pydantic import Field
-
 from sqlalchemy.dialects.postgresql import insert
 from sqlalchemy.orm import Session
 

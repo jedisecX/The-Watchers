@@ -116,6 +116,11 @@ class Settings:
                 raise ConfigError("argon2 memory below OWASP minimum (19 MiB)")
             if self.pow_base_difficulty < 16:
                 raise ConfigError("POW_BASE_DIFFICULTY too low for production")
+            for d in (self.media_quarantine_dir, self.media_store_dir):
+                if not d.startswith("/") or d.startswith("/tmp"):  # noqa: S108  # nosec B108 - this is the guard
+                    raise ConfigError("media directories must be absolute, dedicated volumes (not /tmp) in production")
+            if self.media_quarantine_dir == self.media_store_dir:
+                raise ConfigError("quarantine and media store must be separate directories")
 
 
 def _decode_key(s: str) -> bytes:
@@ -135,7 +140,8 @@ def load_settings() -> Settings:
     if not secret:
         if env == "production":
             raise ConfigError("SECRET_KEY is required")
-        secret = "dev-insecure-secret-key-do-not-use-in-production-000"
+        # Development-only fallback; production refuses to start without a real SECRET_KEY (above).
+        secret = "dev-insecure-secret-key-do-not-use-in-production-000"  # noqa: S105
     fek = _list("FIELD_ENCRYPTION_KEYS")
     if not fek:
         if env == "production":
@@ -167,8 +173,9 @@ def load_settings() -> Settings:
         smtp_from=_raw("SMTP_FROM", "Bastion <no-reply@localhost>") or "",
         smtp_starttls=_bool("SMTP_STARTTLS", True),
         mail_backend=_raw("MAIL_BACKEND", "outbox-only") or "outbox-only",
-        media_quarantine_dir=_raw("MEDIA_QUARANTINE_DIR", "/tmp/bastion/quarantine") or "",
-        media_store_dir=_raw("MEDIA_STORE_DIR", "/tmp/bastion/media") or "",
+        # /tmp defaults are for development only; validate() rejects them in production.
+        media_quarantine_dir=_raw("MEDIA_QUARANTINE_DIR", "/tmp/bastion/quarantine") or "",  # noqa: S108  # nosec B108 - dev default, rejected in production
+        media_store_dir=_raw("MEDIA_STORE_DIR", "/tmp/bastion/media") or "",  # noqa: S108  # nosec B108 - dev default, rejected in production
         media_serve_mode=_raw("MEDIA_SERVE_MODE", "direct") or "direct",
         media_x_accel_prefix=_raw("MEDIA_X_ACCEL_PREFIX", "/_protected_media/") or "",
         pow_base_difficulty=_int("POW_BASE_DIFFICULTY", 18),

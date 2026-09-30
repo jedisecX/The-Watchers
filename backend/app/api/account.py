@@ -33,7 +33,7 @@ from ..authz import PAT_SCOPES, Principal, require_recent_reauth, require_sessio
 from ..config import get_settings
 from ..db import get_db
 from ..deps import PAT_PREFIX, StrictRoute, enforce_limit, principal
-from ..errors import ApiError, not_found
+from ..errors import ApiError, ensure, not_found
 from ..models import (
     ApiToken,
     AuditLog,
@@ -102,7 +102,7 @@ def get_me(p: Principal = Depends(principal), db: Session = Depends(get_db)):
 @router.patch("/api/v1/me")
 def update_me(body: MeUpdateIn, p: Principal = Depends(principal), db: Session = Depends(get_db)):
     _session_principal(p)
-    assert p.user is not None
+    ensure(p.user is not None)
     enforce_limit("settings", str(p.user_id), "anon")
     values: dict[str, Any] = {}
     if body.display_name is not None:
@@ -157,7 +157,7 @@ class PasswordChangeIn(In):
 def change_password(body: PasswordChangeIn, request: Request, response: Response,
                     p: Principal = Depends(principal), db: Session = Depends(get_db)):
     _session_principal(p)
-    assert p.user is not None
+    ensure(p.user is not None)
     enforce_limit("reauth", str(p.user_id), "anon")
     if not verify_password(p.user.password_hash, body.current_password):
         raise ApiError(401, "invalid_credentials", "Incorrect password.")
@@ -188,7 +188,7 @@ class EmailChangeIn(In):
 @router.post("/api/v1/account/email", status_code=202)
 def change_email(body: EmailChangeIn, p: Principal = Depends(principal), db: Session = Depends(get_db)):
     _reauthed(p)
-    assert p.user is not None
+    ensure(p.user is not None)
     enforce_limit("settings", str(p.user_id), "anon")
     new = normalize_email(body.new_email)
     if new != p.user.email and not db.scalar(select(exists().where(User.email == new))):
@@ -207,7 +207,7 @@ class CodeIn(In):
 @router.post("/api/v1/account/mfa/totp/setup")
 def totp_setup(p: Principal = Depends(principal), db: Session = Depends(get_db)):
     _reauthed(p)
-    assert p.user is not None
+    ensure(p.user is not None)
     if p.user.mfa_enabled_at is not None:
         raise ApiError(409, "mfa_already_enabled", "Two-factor authentication is already enabled.")
     secret = mfa.new_secret()
@@ -219,7 +219,7 @@ def totp_setup(p: Principal = Depends(principal), db: Session = Depends(get_db))
 @router.post("/api/v1/account/mfa/totp/enable")
 def totp_enable(body: CodeIn, p: Principal = Depends(principal), db: Session = Depends(get_db)):
     _reauthed(p)
-    assert p.user is not None and p.session is not None
+    ensure(p.user is not None and p.session is not None)
     enforce_limit("mfa_verify", f"user:{p.user_id}", "anon")
     if p.user.mfa_enabled_at is not None or p.user.totp_pending_enc is None:
         raise ApiError(409, "mfa_state", "Start two-factor setup first.")
@@ -241,7 +241,7 @@ def totp_enable(body: CodeIn, p: Principal = Depends(principal), db: Session = D
 @router.post("/api/v1/account/mfa/totp/disable")
 def totp_disable(body: CodeIn, p: Principal = Depends(principal), db: Session = Depends(get_db)):
     _reauthed(p)
-    assert p.user is not None
+    ensure(p.user is not None)
     enforce_limit("mfa_verify", f"user:{p.user_id}", "anon")
     if p.user.mfa_enabled_at is None:
         raise ApiError(409, "mfa_state", "Two-factor authentication is not enabled.")
@@ -263,7 +263,7 @@ def totp_disable(body: CodeIn, p: Principal = Depends(principal), db: Session = 
 @router.post("/api/v1/account/mfa/recovery-codes")
 def regenerate_recovery_codes(p: Principal = Depends(principal), db: Session = Depends(get_db)):
     _reauthed(p)
-    assert p.user is not None
+    ensure(p.user is not None)
     if p.user.mfa_enabled_at is None:
         raise ApiError(409, "mfa_state", "Two-factor authentication is not enabled.")
     codes = mfa.generate_recovery_codes(db, p.user.id)
@@ -282,7 +282,7 @@ class PasskeyRegisterFinishIn(In):
 @router.post("/api/v1/account/passkeys/register/begin")
 def passkey_register_begin(p: Principal = Depends(principal), db: Session = Depends(get_db)):
     _reauthed(p)
-    assert p.user is not None
+    ensure(p.user is not None)
     enforce_limit("settings", str(p.user_id), "anon")
     out = passkeys.begin_registration(db, p.user)
     db.commit()
@@ -293,7 +293,7 @@ def passkey_register_begin(p: Principal = Depends(principal), db: Session = Depe
 def passkey_register_finish(body: PasskeyRegisterFinishIn, p: Principal = Depends(principal),
                             db: Session = Depends(get_db)):
     _reauthed(p)
-    assert p.user is not None
+    ensure(p.user is not None)
     cred = passkeys.finish_registration(db, p.user, body.challenge_id, body.credential,
                                         normalize(body.name, multiline=False)[:50] or "Passkey")
     _audit(db, p, "account.passkey_added", passkey_id=str(cred.id))
@@ -314,7 +314,7 @@ def passkey_list(p: Principal = Depends(principal), db: Session = Depends(get_db
 @router.delete("/api/v1/account/passkeys/{passkey_id}", status_code=204)
 def passkey_delete(passkey_id: uuid.UUID, p: Principal = Depends(principal), db: Session = Depends(get_db)):
     _reauthed(p)
-    assert p.user is not None
+    ensure(p.user is not None)
     res = db.execute(delete(WebAuthnCredential).where(WebAuthnCredential.id == passkey_id,
                                                       WebAuthnCredential.user_id == p.user.id))
     if res.rowcount != 1:
@@ -329,7 +329,7 @@ def passkey_delete(passkey_id: uuid.UUID, p: Principal = Depends(principal), db:
 @router.get("/api/v1/account/sessions")
 def session_list(p: Principal = Depends(principal), db: Session = Depends(get_db)):
     _session_principal(p)
-    assert p.user is not None and p.session is not None
+    ensure(p.user is not None and p.session is not None)
     now = datetime.now(timezone.utc)
     rows = db.execute(select(DbSession).where(
         DbSession.user_id == p.user.id, DbSession.revoked_at.is_(None), DbSession.expires_at > now,
@@ -343,7 +343,7 @@ def session_list(p: Principal = Depends(principal), db: Session = Depends(get_db
 @router.delete("/api/v1/account/sessions/{session_id}", status_code=204)
 def session_revoke(session_id: uuid.UUID, p: Principal = Depends(principal), db: Session = Depends(get_db)):
     _session_principal(p)
-    assert p.user is not None
+    ensure(p.user is not None)
     enforce_limit("settings", str(p.user_id), "anon")
     if not sessions.revoke(db, session_id, p.user.id):
         raise not_found("Session")
@@ -356,7 +356,7 @@ def session_revoke(session_id: uuid.UUID, p: Principal = Depends(principal), db:
 @router.post("/api/v1/account/sessions/revoke-others")
 def session_revoke_others(p: Principal = Depends(principal), db: Session = Depends(get_db)):
     _session_principal(p)
-    assert p.user is not None and p.session is not None
+    ensure(p.user is not None and p.session is not None)
     n = sessions.revoke_all(db, p.user.id, except_id=p.session.id)
     _audit(db, p, "account.sessions_revoked", count=n)
     db.commit()
@@ -386,7 +386,7 @@ def token_list(p: Principal = Depends(principal), db: Session = Depends(get_db))
 @router.post("/api/v1/account/tokens", status_code=201)
 def token_create(body: TokenCreateIn, p: Principal = Depends(principal), db: Session = Depends(get_db)):
     _reauthed(p)
-    assert p.user is not None
+    ensure(p.user is not None)
     enforce_limit("token_create", str(p.user_id), "anon")
     active = db.scalar(select(func.count()).select_from(ApiToken).where(
         ApiToken.user_id == p.user.id, ApiToken.revoked_at.is_(None)))
@@ -426,7 +426,7 @@ def export_data(p: Principal = Depends(principal), db: Session = Depends(get_db)
     """GDPR Art. 20-style export of the requester's own data. DMs: only messages the user sent,
     plus conversation metadata, because received messages are the other party's personal data."""
     _reauthed(p)
-    assert p.user is not None
+    ensure(p.user is not None)
     enforce_limit("export", str(p.user_id), "anon")
     uid = p.user.id
     u = p.user
@@ -470,7 +470,7 @@ class DeleteIn(In):
 def delete_account(body: DeleteIn, response: Response, p: Principal = Depends(principal),
                    db: Session = Depends(get_db)):
     _reauthed(p)
-    assert p.user is not None
+    ensure(p.user is not None)
     if body.confirm_handle.lower() != p.user.handle_norm:
         raise ApiError(400, "confirmation_mismatch", "Type your handle exactly to confirm.")
     if p.user.role == "admin":

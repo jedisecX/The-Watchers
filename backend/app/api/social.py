@@ -19,7 +19,7 @@ from sqlalchemy.orm import Session
 from ..authz import Principal, active_user_clause, assert_can_interact, get_visible_user, require, trust_tier
 from ..db import get_db
 from ..deps import StrictRoute, enforce_limit, principal
-from ..errors import ApiError, not_found
+from ..errors import ApiError, ensure, not_found
 from ..logging_setup import sec_event
 from ..models import Block, FollowRequest, Mute, User
 from ..pagination import Page
@@ -44,7 +44,7 @@ def _active_user(db: Session, handle: str) -> User:
 def follow(handle: str, p: Principal = Depends(principal), db: Session = Depends(get_db)):
     require(p, "follow")
     _limit(p, "follow")
-    assert p.user is not None
+    ensure(p.user is not None)
     target = get_visible_user(db, p.user_id, handle)  # 404 if they blocked you
     if target.id == p.user.id:
         raise ApiError(400, "cannot_follow_self", "You cannot follow yourself.")
@@ -100,7 +100,7 @@ def follow_requests(page: Page = Depends(), p: Principal = Depends(principal), d
 @router.post("/follow-requests/{handle}/accept")
 def accept_request(handle: str, p: Principal = Depends(principal), db: Session = Depends(get_db)):
     require(p, "follow")
-    assert p.user is not None
+    ensure(p.user is not None)
     requester = _active_user(db, handle)
     # Only the *target* of a request can accept it: the request row is looked up by (requester, me).
     res = db.execute(delete(FollowRequest).where(FollowRequest.requester_id == requester.id,

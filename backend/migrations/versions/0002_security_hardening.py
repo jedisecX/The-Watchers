@@ -31,13 +31,14 @@ WORKER_UPDATE_COLS = [
 
 def _role_exists_guard(role: str, sql: str) -> str:
     # Grants are skipped if the role does not exist (e.g. a developer's single-role local DB).
+    # Built only from module-level constants (role/table names), never from input.
     return f"""
 DO $$
 BEGIN
   IF EXISTS (SELECT 1 FROM pg_roles WHERE rolname = '{role}') THEN
     {sql}
   END IF;
-END $$;"""
+END $$;"""  # noqa: S608
 
 
 def upgrade() -> None:

@@ -40,7 +40,7 @@ from ..authz import (
 )
 from ..db import get_db
 from ..deps import StrictRoute, enforce_limit, principal
-from ..errors import ApiError, not_found
+from ..errors import ApiError, ensure, not_found
 from ..logging_setup import sec_event
 from ..models import Conversation, ConversationMember, Media, Message, User
 from ..pagination import Page, finish, keyset_desc
@@ -97,7 +97,7 @@ def _msg_view(m: Message, media: Media | None = None) -> dict:
 @router.post("", status_code=201)
 def start_conversation(body: StartIn, p: Principal = Depends(principal), db: Session = Depends(get_db)):
     require(p, "dm:send")
-    assert p.user is not None
+    ensure(p.user is not None)
     target = get_visible_user(db, p.user_id, body.handle)
     if target.id == p.user.id:
         raise ApiError(400, "cannot_message_self", "You cannot message yourself.")
@@ -160,7 +160,7 @@ def list_messages(conversation_id: uuid.UUID, page: Page = Depends(), p: Princip
 def send_message(conversation_id: uuid.UUID, body: MessageIn, p: Principal = Depends(principal),
                  db: Session = Depends(get_db)):
     require(p, "dm:send")
-    assert p.user is not None
+    ensure(p.user is not None)
     require_conversation_member(db, p.user.id, conversation_id)
     enforce_limit("dm_send", str(p.user_id), trust_tier(p.user))
     other = _other_member(db, conversation_id, p.user.id)

@@ -35,7 +35,7 @@ from ..authz import (
 )
 from ..db import get_db
 from ..deps import StrictRoute, enforce_limit, principal
-from ..errors import ApiError
+from ..errors import ApiError, ensure
 from ..models import Follow, Like, Mute, Post, PostHashtag, Repost, User
 from ..pagination import Page, finish, keyset_asc, keyset_desc
 from ..schemas import In
@@ -66,7 +66,7 @@ def _not_muted(viewer_id, author_col):
 def create_post(body: PostIn, p: Principal = Depends(principal), db: Session = Depends(get_db)):
     require(p, "post:create")
     _limit(p, "post_create")
-    assert p.user is not None
+    ensure(p.user is not None)
     post, pending = svc.create_post(db, p.user, body.text, body.visibility, body.reply_to_id, body.media_ids)
     db.commit()
     notify.push(pending)

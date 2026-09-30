@@ -1,0 +1,189 @@
+# Bastion production-style deployment.
+#   ./deploy/gen-secrets.sh && PUBLIC_BASE_URL=https://bastion.example python scripts/render_nginx.py
+#   PUBLIC_BASE_URL=https://bastion.example BASTION_HOST=bastion.example docker compose -f deploy/docker-compose.yml up -d --build
+#
+# Network segmentation (THREAT-MODEL §3, §22):
+#   edge     : nginx <-> api                      (only nginx publishes ports)
+#   backend  : api/mailer/migrate <-> postgres, redis   (internal: no Internet egress)
+#   workernet: worker <-> postgres                (internal; worker cannot reach redis, api or SMTP)
+#   mail     : mailer -> SMTP relay               (the only service with outbound network)
+# Postgres and Redis publish NO ports.
+
+x-hardening: &hardening
+  read_only: true
+  security_opt: ["no-new-privileges:true"]
+  cap_drop: ["ALL"]
+  restart: unless-stopped
+  logging: { driver: json-file, options: { max-size: "20m", max-file: "5" } }
+
+x-app-env: &app-env
+  ENV: production
+  PUBLIC_BASE_URL: ${PUBLIC_BASE_URL:?set PUBLIC_BASE_URL}
+  ALLOWED_HOSTS: ${BASTION_HOST:?set BASTION_HOST}
+  TRUSTED_PROXIES: 172.30.1.10/32
+  WEBAUTHN_RP_ID: ${BASTION_HOST}
+  SECRET_KEY_FILE: /run/secrets/secret_key
+  FIELD_ENCRYPTION_KEYS_FILE: /run/secrets/field_encryption_keys
+  DATABASE_URL_FILE: /run/secrets/database_url
+  REDIS_URL_FILE: /run/secrets/redis_url
+  MAIL_BACKEND: smtp
+  SMTP_HOST: ${SMTP_HOST:-smtp.example.com}
+  SMTP_USER: ${SMTP_USER:-}
+  SMTP_PASSWORD_FILE: /run/secrets/smtp_password
+  SMTP_FROM: ${SMTP_FROM:-Bastion <no-reply@example.com>}
+  MEDIA_QUARANTINE_DIR: /srv/quarantine
+  MEDIA_STORE_DIR: /srv/media
+  MEDIA_SERVE_MODE: x-accel
+
+services:
+  postgres:
+    image: postgres:16-alpine   # pin by digest in production
+    <<: *hardening
+    read_only: false            # data directory must be writable
+    cap_add: ["CHOWN", "SETUID", "SETGID", "FOWNER", "DAC_OVERRIDE"]  # entrypoint then drops to the postgres user
+    environment:
+      POSTGRES_DB: bastion
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD_FILE: /run/secrets/pg_superuser_password
+      POSTGRES_INITDB_ARGS: "--auth-host=scram-sha-256"
+      BASTION_APP_PASSWORD_FILE: /run/secrets/pg_app_password
+      BASTION_WORKER_PASSWORD_FILE: /run/secrets/pg_worker_password
+      BASTION_MIGRATOR_PASSWORD_FILE: /run/secrets/pg_migrator_password
+    # log_statement=ddl records any attempt to disable the audit_log triggers.
+    command: >
+      postgres -c password_encryption=scram-sha-256 -c log_connections=on -c log_disconnections=on
+               -c log_statement=ddl -c log_line_prefix='%m [%p] %q%u@%d '
+               -c statement_timeout=30000 -c idle_in_transaction_session_timeout=60000
+    secrets: [pg_superuser_password, pg_app_password, pg_worker_password, pg_migrator_password]
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./postgres/init-roles.sh:/docker-entrypoint-initdb.d/10-roles.sh:ro
+    tmpfs: ["/tmp", "/run/postgresql"]
+    networks: [backend, workernet]
+    mem_limit: 2g
+    cpus: 2
+    pids_limit: 200
+    healthcheck: { test: ["CMD", "pg_isready", "-U", "postgres"], interval: 10s, retries: 5 }
+
+  redis:
+    image: redis:7-alpine       # pin by digest in production
+    <<: *hardening
+    user: "999:999"
+    entrypoint: ["sh", "-c", "exec redis-server --requirepass \"$$(cat /run/secrets/redis_password)\" --save '' --appendonly no --protected-mode yes --rename-command FLUSHALL '' --rename-command FLUSHDB '' --rename-command CONFIG '' --rename-command DEBUG '' --maxmemory 256mb --maxmemory-policy volatile-lru"]
+    secrets: [redis_password]
+    tmpfs: ["/data"]
+    networks: [backend]
+    mem_limit: 320m
+    pids_limit: 50
+
+  migrate:
+    build: { context: ../backend, target: jobs }
+    <<: *hardening
+    restart: "no"
+    user: "10001:10001"
+    command: ["alembic", "upgrade", "head"]
+    environment:
+      MIGRATION_DATABASE_URL_FILE: /run/secrets/migration_database_url
+    secrets: [migration_database_url]
+    networks: [backend]
+    depends_on: { postgres: { condition: service_healthy } }
+
+  api:
+    build: { context: ../backend, target: api }
+    <<: *hardening
+    user: "10001:10001"
+    environment: *app-env
+    secrets: [secret_key, field_encryption_keys, database_url, redis_url, smtp_password]
+    volumes:
+      - quarantine:/srv/quarantine   # the API only writes raw uploads here; it never decodes them
+    tmpfs: ["/tmp:size=64m,mode=1777"]
+    networks:
+      edge: { ipv4_address: 172.30.1.20 }
+      backend: {}
+    mem_limit: 1g
+    cpus: 2
+    pids_limit: 256
+    depends_on:
+      migrate: { condition: service_completed_successfully }
+      redis: { condition: service_started }
+
+  worker:
+    build: { context: ../backend, target: worker }
+    <<: *hardening
+    user: "10001:10001"
+    environment:
+      ENV: production
+      PUBLIC_BASE_URL: ${PUBLIC_BASE_URL}
+      WORKER_DATABASE_URL_FILE: /run/secrets/worker_database_url
+      # The worker holds no application secrets. These placeholders only satisfy config validation
+      # and grant nothing (the worker never signs, encrypts, mails, or touches Redis).
+      SECRET_KEY: worker-has-no-use-for-this-key-0000000000000000
+      FIELD_ENCRYPTION_KEYS: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=
+      REDIS_URL: redis://unused.invalid:1/0
+      MAIL_BACKEND: smtp
+      SMTP_HOST: unused.invalid
+      MEDIA_QUARANTINE_DIR: /srv/quarantine
+      MEDIA_STORE_DIR: /srv/media
+    secrets: [worker_database_url]
+    volumes:
+      - quarantine:/srv/quarantine
+      - media:/srv/media
+    tmpfs: ["/tmp:size=256m,mode=1777"]
+    networks: [workernet]
+    mem_limit: 3g
+    cpus: 2
+    pids_limit: 64
+
+  mailer:
+    build: { context: ../backend, target: jobs }
+    <<: *hardening
+    user: "10001:10001"
+    command: ["python", "-m", "app.cli", "mail-loop"]
+    environment: *app-env
+    secrets: [secret_key, field_encryption_keys, database_url, redis_url, smtp_password]
+    tmpfs: ["/tmp:size=16m"]
+    networks: [backend, mail]
+    mem_limit: 256m
+    pids_limit: 32
+
+  nginx:
+    build: { context: .., dockerfile: deploy/nginx/Dockerfile }
+    <<: *hardening
+    ports: ["80:8080", "443:8443"]
+    secrets: [tls_cert, tls_key]
+    volumes:
+      - media:/srv/media:ro
+    tmpfs: ["/tmp:size=64m"]
+    networks:
+      edge: { ipv4_address: 172.30.1.10 }
+    mem_limit: 256m
+    pids_limit: 64
+    depends_on: [api]
+
+networks:
+  edge:
+    ipam: { config: [{ subnet: 172.30.1.0/24 }] }
+  backend: { internal: true }
+  workernet: { internal: true }
+  mail: {}
+
+volumes:
+  pgdata: {}
+  quarantine: {}
+  media: {}
+
+secrets:
+  pg_superuser_password: { file: ./secrets/pg_superuser_password }
+  pg_app_password: { file: ./secrets/pg_app_password }
+  pg_worker_password: { file: ./secrets/pg_worker_password }
+  pg_migrator_password: { file: ./secrets/pg_migrator_password }
+  redis_password: { file: ./secrets/redis_password }
+  secret_key: { file: ./secrets/secret_key }
+  field_encryption_keys: { file: ./secrets/field_encryption_keys }
+  database_url: { file: ./secrets/database_url }
+  worker_database_url: { file: ./secrets/worker_database_url }
+  migration_database_url: { file: ./secrets/migration_database_url }
+  redis_url: { file: ./secrets/redis_url }
+  smtp_password: { file: ./secrets/smtp_password }
+  tls_cert: { file: ./secrets/tls_cert }
+  tls_key: { file: ./secrets/tls_key }

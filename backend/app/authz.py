@@ -20,7 +20,7 @@ from datetime import datetime, timedelta, timezone
 from sqlalchemy import and_, exists, false, or_, select
 from sqlalchemy.orm import Session, aliased
 
-from .errors import ApiError, forbidden, not_found
+from .errors import ApiError, ensure, forbidden, not_found
 from .logging_setup import sec_event
 from .models import ApiToken, Block, ConversationMember, Follow, Post, User
 from .models import Session as DbSession
@@ -130,7 +130,7 @@ def _recent(ts: datetime | None, minutes: int) -> bool:
 
 def require_recent_reauth(p: Principal, minutes: int) -> None:
     require_session(p)
-    assert p.session is not None and p.user is not None
+    ensure(p.session is not None and p.user is not None)
     if not _recent(p.session.reauth_at, minutes):
         raise ApiError(403, "reauth_required", "Please confirm your password to continue.")
     if user_has_mfa(p.user) and not _recent(p.session.mfa_at, minutes):
@@ -145,7 +145,7 @@ def require_admin_context(p: Principal, permission: str, stepup_minutes: int) ->
     """Admin/moderator API: role + MFA enrolled + phishing-resistant or TOTP step-up recently."""
     require_session(p)
     require(p, permission)
-    assert p.session is not None and p.user is not None
+    ensure(p.session is not None and p.user is not None)
     if not (p.user.mfa_enabled_at is not None or p.session.auth_method == "passkey"):
         raise ApiError(403, "mfa_required", "Administrative access requires multi-factor authentication.")
     if not _recent(p.session.mfa_at, stepup_minutes):

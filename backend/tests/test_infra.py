@@ -186,7 +186,7 @@ def test_audit_chain_verifies(db):
 
 def test_audit_log_is_append_only_for_app_role(db):
     _write_audit(db, 1)
-    from sqlalchemy.exc import ProgrammingError, DBAPIError
+    from sqlalchemy.exc import DBAPIError, ProgrammingError
     for stmt in ("UPDATE audit_log SET action='x'", "DELETE FROM audit_log", "TRUNCATE audit_log"):
         with pytest.raises((ProgrammingError, DBAPIError)):
             db.execute(text(stmt))
@@ -217,6 +217,7 @@ def test_audit_tampering_detected(migrator_engine, db):
 # ------------------------------------------------------------------ worker role least privilege
 def test_worker_role_cannot_read_users():
     import os
+
     from sqlalchemy import create_engine
     from sqlalchemy.exc import ProgrammingError
     eng = create_engine(os.environ["WORKER_DATABASE_URL"])

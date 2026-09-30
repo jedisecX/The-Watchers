@@ -74,7 +74,7 @@ def decrypt_field(blob: bytes, aad: bytes) -> bytes:
     for key in keys:
         try:
             return AESGCM(key).decrypt(nonce, ct, aad)
-        except Exception:  # noqa: BLE001 - InvalidTag; try next key
+        except Exception:  # noqa: BLE001, S112 - InvalidTag is expected while walking the key ring
             continue
     raise ValueError("cannot decrypt field")
 

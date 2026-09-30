@@ -12,7 +12,7 @@ from sqlalchemy import select, update
 
 from app.models import ApiToken, AuditLog, RecoveryCode, User
 from app.models import Session as DbSession
-from tests.helpers import ORIGIN, PASSWORD, fresh_totp, token_from_outbox
+from tests.helpers import ORIGIN, PASSWORD, token_from_outbox
 
 H = {"Origin": ORIGIN}
 

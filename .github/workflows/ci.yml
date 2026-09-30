@@ -1,0 +1,240 @@
+# Security gates. Any job failing blocks the merge (configure as required checks on the default branch).
+# All third-party actions are pinned to full commit SHAs (tags are mutable; SHAs are not).
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  schedule:
+    - cron: "17 4 * * 1"   # weekly re-scan: new CVEs appear in unchanged dependencies
+
+permissions:
+  contents: read           # least privilege by default; jobs opt in to more
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  PYTHON_VERSION: "3.11"
+
+jobs:
+  # ------------------------------------------------------------------ lint + SAST
+  static-analysis:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with: { persist-credentials: false }
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with: { python-version: "${{ env.PYTHON_VERSION }}" }
+      - name: Install locked tooling
+        run: pip install --require-hashes --no-deps -r backend/requirements-dev.txt
+      - name: Ruff (lint + flake8-bandit rules)
+        run: cd backend && ruff check app tests migrations
+      - name: Bandit (fail on medium+)
+        run: cd backend && bandit -r app -ll
+      - name: Project security gates (DOM sinks, SQL interpolation, StrictRoute, vendored hashes, CSP drift)
+        run: |
+          PUBLIC_BASE_URL=https://bastion.example python scripts/render_nginx.py
+          git diff --exit-code deploy/nginx/spa_headers.conf
+          python scripts/check_security.py
+      - name: Semgrep (OWASP Top 10, Python, JS, secrets)
+        run: |
+          docker run --rm -v "$PWD:/src" semgrep/semgrep:1.99.0 semgrep scan --error --metrics=off \
+            --config p/owasp-top-ten --config p/python --config p/javascript --config p/secrets \
+            --severity ERROR --exclude backend/tests /src
+
+  # ------------------------------------------------------------------ secrets
+  secret-scan:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with: { fetch-depth: 0, persist-credentials: false }
+      - uses: gitleaks/gitleaks-action@ff98106e4c7b2bc287b24eaf42907196329070c7 # v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITLEAKS_CONFIG: .gitleaks.toml
+
+  # ------------------------------------------------------------------ dependencies
+  dependency-scan:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with: { persist-credentials: false }
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with: { python-version: "${{ env.PYTHON_VERSION }}" }
+      - name: Lockfile integrity (lock matches .in, every artifact hash-pinned)
+        shell: bash
+        run: |
+          pip install --require-hashes --no-deps -r backend/requirements-dev.txt
+          cd backend
+          uv pip compile -q requirements.in --generate-hashes --python-version 3.11 -o /tmp/req.txt
+          diff <(grep -E '^[a-z]' requirements.txt) <(grep -E '^[a-z]' /tmp/req.txt)
+      - name: Only wheels from PyPI (no sdists executing setup.py; no extra indexes = no dependency confusion)
+        run: |
+          cd backend
+          ! grep -E -- '--(extra-)?index-url' requirements*.txt
+          pip download --require-hashes --no-deps --only-binary=:all: -r requirements.txt -d /tmp/wheels
+      - name: pip-audit (known vulnerabilities; fails on any)
+        run: cd backend && pip-audit -r requirements.txt --require-hashes --strict --progress-spinner off
+      - name: SBOM (CycloneDX, Python)
+        run: cd backend && cyclonedx-py requirements requirements.txt -o ../sbom-python.cdx.json
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with: { name: sbom-python, path: sbom-python.cdx.json }
+
+  dependency-review:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-24.04
+    permissions: { contents: read, pull-requests: write }
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with: { persist-credentials: false }
+      - uses: actions/dependency-review-action@a1d282b36b6f3519aa1f3fc636f609c47dddb294 # v5.0.0
+        with:
+          fail-on-severity: high
+          deny-licenses: GPL-3.0, AGPL-3.0
+
+  # ------------------------------------------------------------------ unit / integration / security tests
+  tests:
+    runs-on: ubuntu-24.04
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env: { POSTGRES_PASSWORD: ci_only_superuser }
+        ports: ["5432:5432"]
+        options: --health-cmd "pg_isready -U postgres" --health-interval 5s --health-retries 10
+      redis:
+        image: redis:7-alpine
+        ports: ["6379:6379"]
+    env:
+      PGPASSWORD: ci_only_superuser
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with: { persist-credentials: false }
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with: { python-version: "${{ env.PYTHON_VERSION }}" }
+      - run: sudo apt-get update && sudo apt-get install -y --no-install-recommends ffmpeg postgresql-client
+      - run: pip install --require-hashes --no-deps -r backend/requirements-dev.txt
+      - run: ./scripts/ci_db_setup.sh
+      - name: Migrations are reversible and match the models
+        working-directory: backend
+        env: { MIGRATION_DATABASE_URL: "postgresql+psycopg://bastion_migrator:dev_migrator_pw@localhost/bastion" }
+        run: alembic upgrade head && alembic downgrade base && alembic upgrade head && alembic check
+      - name: Full test suite (authn, authz matrix, injection, uploads, API, realtime, business logic, adversarial)
+        working-directory: backend
+        run: python -m pytest tests -p no:cacheprovider --junitxml=../junit.xml
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with: { name: junit, path: junit.xml }
+
+  # ------------------------------------------------------------------ browser E2E under the real CSP
+  e2e:
+    runs-on: ubuntu-24.04
+    needs: tests
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env: { POSTGRES_PASSWORD: ci_only_superuser }
+        ports: ["5432:5432"]
+        options: --health-cmd "pg_isready -U postgres" --health-interval 5s --health-retries 10
+      redis:
+        image: redis:7-alpine
+        ports: ["6379:6379"]
+    env:
+      PGPASSWORD: ci_only_superuser
+      ENV: development
+      DATABASE_URL: postgresql+psycopg://bastion_app:dev_app_pw@localhost/bastion
+      WORKER_DATABASE_URL: postgresql+psycopg://bastion_worker:dev_worker_pw@localhost/bastion
+      MIGRATION_DATABASE_URL: postgresql+psycopg://bastion_migrator:dev_migrator_pw@localhost/bastion
+      REDIS_URL: redis://localhost:6379/0
+      PUBLIC_BASE_URL: http://localhost:8000
+      POW_BASE_DIFFICULTY: "12"
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with: { persist-credentials: false }
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with: { python-version: "${{ env.PYTHON_VERSION }}" }
+      - run: sudo apt-get update && sudo apt-get install -y --no-install-recommends ffmpeg postgresql-client
+      - run: pip install --require-hashes --no-deps -r backend/requirements-dev.txt && python -m playwright install --with-deps chromium
+      - run: ./scripts/ci_db_setup.sh && cd backend && alembic upgrade head
+      - name: Start API and worker
+        working-directory: backend
+        run: |
+          SECRET_KEY="$(openssl rand -hex 32)" nohup uvicorn app.main:create_app --factory --port 8000 &
+          nohup python -m app.worker &
+          for i in $(seq 1 30); do curl -sf localhost:8000/api/v1/health && break; sleep 1; done
+      - name: E2E (fails on any console error or CSP / Trusted Types violation)
+        run: python scripts/e2e_smoke.py --shots e2e-shots
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with: { name: e2e-screenshots, path: e2e-shots }
+
+  # ------------------------------------------------------------------ containers + IaC
+  containers:
+    runs-on: ubuntu-24.04
+    permissions: { contents: read, security-events: write }
+    strategy:
+      matrix:
+        image:
+          - { name: api, context: backend, file: backend/Dockerfile, target: api }
+          - { name: worker, context: backend, file: backend/Dockerfile, target: worker }
+          - { name: jobs, context: backend, file: backend/Dockerfile, target: jobs }
+          - { name: nginx, context: ., file: deploy/nginx/Dockerfile, target: "" }
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with: { persist-credentials: false }
+      - uses: docker/setup-buildx-action@8d2750c68a42422c14e847fe6c8ac0403b4cbd6f # v3
+      - uses: docker/build-push-action@10e90e3645eae34f1e60eeb005ba3a3d33f178e8 # v6
+        with:
+          context: ${{ matrix.image.context }}
+          file: ${{ matrix.image.file }}
+          target: ${{ matrix.image.target }}
+          load: true
+          push: false
+          tags: bastion-${{ matrix.image.name }}:ci
+          provenance: false
+      - name: Image runs as non-root
+        run: test "$(docker image inspect bastion-${{ matrix.image.name }}:ci -f '{{.Config.User}}')" != "" && test "$(docker image inspect bastion-${{ matrix.image.name }}:ci -f '{{.Config.User}}')" != "root"
+      - name: Trivy image scan (fail on fixable HIGH/CRITICAL)
+        uses: aquasecurity/trivy-action@a9c7b0f06e461e9d4b4d1711f154ee024b8d7ab8 # v0.36.0
+        with:
+          image-ref: bastion-${{ matrix.image.name }}:ci
+          severity: CRITICAL,HIGH
+          ignore-unfixed: true
+          exit-code: "1"
+          vuln-type: os,library
+      - name: Image SBOM (CycloneDX)
+        uses: aquasecurity/trivy-action@a9c7b0f06e461e9d4b4d1711f154ee024b8d7ab8 # v0.36.0
+        with:
+          image-ref: bastion-${{ matrix.image.name }}:ci
+          format: cyclonedx
+          output: sbom-${{ matrix.image.name }}.cdx.json
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with: { name: "sbom-image-${{ matrix.image.name }}", path: "sbom-${{ matrix.image.name }}.cdx.json" }
+
+  iac-scan:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with: { persist-credentials: false }
+      - name: Trivy config scan (Dockerfiles, compose, nginx) — fail on HIGH/CRITICAL misconfig
+        uses: aquasecurity/trivy-action@a9c7b0f06e461e9d4b4d1711f154ee024b8d7ab8 # v0.36.0
+        with:
+          scan-type: config
+          scan-ref: .
+          severity: CRITICAL,HIGH
+          exit-code: "1"
+
+  # ------------------------------------------------------------------ CodeQL
+  codeql:
+    runs-on: ubuntu-24.04
+    permissions: { contents: read, security-events: write }
+    strategy:
+      matrix: { language: [python, javascript] }
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with: { persist-credentials: false }
+      - uses: github/codeql-action/init@1190a975f95ce23525efb6a3fc21ea29567c1b52 # v3
+        with: { languages: "${{ matrix.language }}", queries: security-extended }
+      - uses: github/codeql-action/analyze@1190a975f95ce23525efb6a3fc21ea29567c1b52 # v3

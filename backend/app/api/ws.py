@@ -31,7 +31,6 @@ from fastapi import APIRouter, Depends, WebSocket
 from fastapi.concurrency import run_in_threadpool
 from sqlalchemy import select
 from sqlalchemy.orm import Session
-from starlette.websockets import WebSocketDisconnect
 
 from .. import ratelimit, strictjson
 from ..authz import Principal, is_blocked, require
@@ -224,7 +223,7 @@ async def _receiver(ws: WebSocket, conn: Connection) -> None:
     while True:
         try:
             msg = await asyncio.wait_for(ws.receive(), timeout=IDLE_TIMEOUT)
-        except asyncio.TimeoutError:
+        except TimeoutError:
             conn.close_code = 1000
             return
         if msg["type"] == "websocket.disconnect":

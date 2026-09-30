@@ -32,7 +32,7 @@ from ..authz import Principal, require_session, trust_tier
 from ..config import get_settings
 from ..db import get_db
 from ..deps import StrictRoute, enforce_limit, principal
-from ..errors import ApiError
+from ..errors import ApiError, ensure
 from ..logging_setup import sec_event
 from ..models import Session as DbSession
 from ..models import User, WebAuthnCredential
@@ -413,7 +413,7 @@ def reset_confirm(body: ResetConfirmIn, p: Principal = Depends(principal), db: S
 @router.post("/reauth")
 def reauth(body: ReauthIn, p: Principal = Depends(principal), db: Session = Depends(get_db)):
     require_session(p)
-    assert p.user is not None and p.session is not None
+    ensure(p.user is not None and p.session is not None)
     enforce_limit("reauth", str(p.user_id), "anon")
     if not verify_password(p.user.password_hash, body.password):
         sec_event("auth.reauth_failed", user_id=str(p.user_id))
@@ -444,7 +444,7 @@ def reauth_passkey_begin(p: Principal = Depends(principal), db: Session = Depend
 @router.post("/reauth/passkey/finish")
 def reauth_passkey_finish(body: PasskeyFinishIn, p: Principal = Depends(principal), db: Session = Depends(get_db)):
     require_session(p)
-    assert p.session is not None
+    ensure(p.session is not None)
     enforce_limit("reauth", str(p.user_id), "anon")
     passkeys.finish_authentication(db, body.challenge_id, body.credential, p.user)
     now = datetime.now(timezone.utc)

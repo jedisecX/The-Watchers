@@ -1,0 +1,16 @@
+title = "Bastion gitleaks config"
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Test fixtures and documented development-only placeholders (never valid in production: config.validate() rejects them)"
+paths = [
+  '''backend/tests/.*''',
+  '''scripts/ci_db_setup\.sh''',
+  '''frontend/assets/vendor/VENDORED\.md''',
+]
+regexes = [
+  '''dev_(app|worker|migrator)_pw''',
+  '''dev-insecure-secret-key-do-not-use-in-production-000''',
+  '''worker-has-no-use-for-this-key-0+''',
+]

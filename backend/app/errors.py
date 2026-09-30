@@ -97,3 +97,10 @@ def install(app: FastAPI) -> None:
     async def _unhandled(request: Request, exc: Exception):
         log.error("unhandled_exception", exc_info=exc, extra={"event": "http.unhandled", "path": request.url.path})
         return error_response(request, 500, "internal_error", "An internal error occurred.")
+
+
+def ensure(condition: object) -> None:
+    """Runtime invariant check that survives ``python -O`` (unlike ``assert``). Never use assert for
+    security: it is stripped under optimisation (bandit B101)."""
+    if not condition:
+        raise ApiError(401, "unauthenticated", "Authentication required.")
