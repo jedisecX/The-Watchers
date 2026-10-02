@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title>Text News</title>
+    <link>https://news.example/</link>
+    <description>Text only.</description>
+    <item>
+      <title>Industry news roundup</title>
+      <link>https://news.example/roundup</link>
+      <guid>news-roundup-1</guid>
+      <pubDate>Thu, 05 Jun 2025 06:00:00 GMT</pubDate>
+      <description>A plain text roundup of industry news with no media at all.</description>
+    </item>
+    <item>
+      <title>Video of the week</title>
+      <link>https://news.example/video-week</link>
+      <guid>news-video-1</guid>
+      <pubDate>Thu, 05 Jun 2025 07:00:00 GMT</pubDate>
+      <description>Weekly pick.</description>
+      <enclosure url="https://cdn.news.example/week.mp4" type="video/mp4" length="1000"/>
+    </item>
+  </channel>
+</rss>

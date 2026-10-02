@@ -1,0 +1,4 @@
+<?xml version="1.0"?>
+<rss version="2.0"><channel><title>Truncated</title><link>https://trunc.example/</link>
+<item><title>Complete item</title><link>https://trunc.example/1</link><guid>trunc-1</guid><enclosure url="https://cdn.trunc.example/1.mp4" type="video/mp4" length="1"/></item>
+<item><title>Cut off mid-ite

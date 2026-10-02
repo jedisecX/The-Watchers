@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>XSS</title><link>https://xss.example/</link>
+<item><title>&lt;script&gt;alert('title')&lt;/script&gt;Hello</title><link>https://xss.example/1</link><guid>xss-1</guid><pubDate>Mon, 02 Jun 2025 08:00:00 GMT</pubDate>
+<description><![CDATA[<p onclick="alert(1)">Hi <img src="x" onerror="alert(2)"><a href="javascript:alert(3)">click</a><a href="https://ok.example/">ok</a></p><script>alert(4)</script><style>body{display:none}</style><svg><script>alert(5)</script></svg><form action="https://phish.example"><input name="pw"></form><object data="evil.swf"></object><a href="data:text/html;base64,PHNjcmlwdD4=">data</a><img src="https://xss.example/ok.jpg" srcset="javascript:alert(6)" style="x:expression(alert(7))">]]></description>
+<content:encoded><![CDATA[<div><iframe src="https://evil.example/"></iframe><p>Full <em>content</em></p><base href="https://evil.example/"><meta http-equiv="refresh" content="0;url=https://evil.example"></div>]]></content:encoded>
+</item></channel></rss>

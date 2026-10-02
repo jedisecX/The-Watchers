@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<rss version="2.0"><channel><title>Minimal</title>
+<item><link>https://min.example/only-a-link</link></item>
+<item><description>No title, no link, no guid, no date: just a description of the item.</description></item>
+</channel></rss>

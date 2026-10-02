@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<rss version="2.0"><channel><title>Dupe URLs</title><link>https://dupe.example/</link>
+<item><title>Canonical A</title><link>https://dupe.example/story?utm_source=rss&amp;utm_medium=feed</link><guid>url-guid-1</guid><pubDate>Mon, 02 Jun 2025 08:00:00 GMT</pubDate><description>first</description></item>
+<item><title>Canonical A again</title><link>HTTPS://DUPE.EXAMPLE:443/story#comments</link><guid>url-guid-2</guid><pubDate>Mon, 02 Jun 2025 09:00:00 GMT</pubDate><description>second</description></item>
+</channel></rss>

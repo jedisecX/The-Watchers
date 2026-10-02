@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:media="http://search.yahoo.com/mrss/">
+  <channel>
+    <title>MRSS Network</title>
+    <link>https://mrss.example/</link>
+    <description>Synthetic Media RSS feed.</description>
+    <item>
+      <title>Feature presentation</title>
+      <link>https://mrss.example/v/feature</link>
+      <guid>mrss-feature-1</guid>
+      <pubDate>Wed, 04 Jun 2025 12:00:00 GMT</pubDate>
+      <media:group>
+        <media:title>Feature presentation (HD)</media:title>
+        <media:description>The feature in two encodings.</media:description>
+        <media:thumbnail url="https://cdn.mrss.example/feature/poster.jpg" width="1280" height="720"/>
+        <media:credit role="producer">MRSS Studio</media:credit>
+        <media:content url="https://cdn.mrss.example/feature/1080.webm" type="video/webm" medium="video" width="1920" height="1080" duration="754" fileSize="99000000" isDefault="true"/>
+        <media:content url="https://cdn.mrss.example/feature/720.mp4" type="video/mp4" medium="video" width="1280" height="720" duration="754"/>
+        <media:player url="https://player.mrss.example/embed/feature"/>
+      </media:group>
+    </item>
+  </channel>
+</rss>

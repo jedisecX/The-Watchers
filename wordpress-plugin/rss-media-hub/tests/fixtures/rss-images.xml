@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:media="http://search.yahoo.com/mrss/">
+  <channel>
+    <title>Photo Sets</title>
+    <link>https://photos.example/</link>
+    <description>Synthetic gallery feed.</description>
+    <item>
+      <title>Set 7: Golden hour</title>
+      <link>https://photos.example/sets/7</link>
+      <guid>photos-set-7</guid>
+      <pubDate>Sun, 01 Jun 2025 18:00:00 GMT</pubDate>
+      <description><![CDATA[<p>Golden hour set.</p>
+        <img src="https://img.photos.example/7/a.jpg" alt="Frame A" width="1200" height="800">
+        <img src="https://img.photos.example/7/b.jpg" alt="Frame B" width="1200" height="800">
+        <img src="/7/c.webp" alt="Frame C">
+        <img src="https://tracker.photos.example/pixel.gif" width="1" height="1">]]></description>
+      <media:content url="https://img.photos.example/7/d.png" medium="image" width="1000" height="1500"/>
+    </item>
+  </channel>
+</rss>

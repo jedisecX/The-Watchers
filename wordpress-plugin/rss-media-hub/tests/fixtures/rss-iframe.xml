@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<rss version="2.0"><channel><title>Embeds</title><link>https://embeds.example/</link>
+<item><title>Untrusted iframe</title><link>https://embeds.example/evil</link><guid>embed-evil</guid><pubDate>Mon, 02 Jun 2025 08:00:00 GMT</pubDate>
+<description><![CDATA[<p>Watch:</p><iframe src="https://evil.example/player?steal=1" width="640" height="360"></iframe><iframe src="javascript:alert(document.cookie)"></iframe>]]></description></item>
+<item><title>Trusted provider</title><link>https://embeds.example/yt</link><guid>embed-yt</guid><pubDate>Mon, 02 Jun 2025 09:00:00 GMT</pubDate>
+<description><![CDATA[<iframe src="https://www.youtube.com/embed/aqz-KE-bpKQ" onload="alert(1)"></iframe>]]></description></item>
+</channel></rss>

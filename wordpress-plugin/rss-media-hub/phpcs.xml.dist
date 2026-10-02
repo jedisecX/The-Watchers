@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<ruleset name="RSS Media Hub">
+	<description>WordPress coding standards, security sniffs and PHP 7.4+ compatibility.</description>
+	<file>.</file>
+	<exclude-pattern>/tests/*</exclude-pattern>
+	<exclude-pattern>/vendor/*</exclude-pattern>
+	<exclude-pattern>/bin/*</exclude-pattern>
+	<arg name="extensions" value="php"/>
+	<arg value="sp"/>
+
+	<config name="testVersion" value="7.4-"/>
+	<config name="minimum_wp_version" value="6.2"/>
+
+	<rule ref="WordPress-Extra">
+		<!-- PSR-4 style class files (includes/Feed/AtomAdapter.php) instead of class-*.php. -->
+		<exclude name="WordPress.Files.FileName"/>
+		<!-- Short ternaries are used deliberately for readable fallbacks. -->
+		<exclude name="Universal.Operators.DisallowShortTernary"/>
+	</rule>
+	<rule ref="WordPress.Security"/>
+	<rule ref="WordPress.DB.PreparedSQL"/>
+	<rule ref="WordPress.DB.PreparedSQLPlaceholders"/>
+	<rule ref="PHPCompatibilityWP"/>
+
+	<rule ref="WordPress.WP.Capabilities">
+		<properties>
+			<property name="custom_capabilities" type="array">
+				<element value="rmh_manage_feeds"/>
+				<element value="rmh_moderate"/>
+			</property>
+		</properties>
+	</rule>
+	<!-- DOMDocument/DOMNode expose camelCase properties (localName, namespaceURI, textContent...). -->
+	<rule ref="WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase">
+		<exclude-pattern>/includes/Feed/*</exclude-pattern>
+		<exclude-pattern>/includes/Media/HtmlMediaExtractor.php</exclude-pattern>
+	</rule>
+
+	<rule ref="WordPress.WP.I18n">
+		<properties>
+			<property name="text_domain" type="array"><element value="rss-media-hub"/></property>
+		</properties>
+	</rule>
+	<!-- "rmh"/"RMH" is used consistently for every global, option, hook, table and the namespace. -->
+	<rule ref="WordPress.NamingConventions.PrefixAllGlobals.ShortPrefixPassed">
+		<severity>0</severity>
+	</rule>
+	<rule ref="WordPress.NamingConventions.PrefixAllGlobals">
+		<properties>
+			<property name="prefixes" type="array">
+				<element value="rmh"/>
+				<element value="RMH"/>
+			</property>
+		</properties>
+	</rule>
+</ruleset>

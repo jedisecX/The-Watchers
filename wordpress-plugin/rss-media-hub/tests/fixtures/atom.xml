@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:media="http://search.yahoo.com/mrss/">
+  <title>Atom Creators</title>
+  <subtitle>Synthetic Atom feed</subtitle>
+  <link href="https://atom.example/" rel="alternate"/>
+  <link href="https://atom.example/feed.atom" rel="self"/>
+  <id>urn:uuid:60a76c80-d399-11d9-b93C-0003939e0af6</id>
+  <updated>2025-06-05T10:00:00Z</updated>
+  <author><name>Atom Team</name></author>
+  <entry>
+    <title type="html">Episode &lt;b&gt;one&lt;/b&gt; &amp; more</title>
+    <link rel="alternate" href="/posts/one"/>
+    <link rel="enclosure" href="https://cdn.atom.example/one.webm" type="video/webm" length="2048"/>
+    <id>tag:atom.example,2025:1</id>
+    <published>2025-06-05T09:30:00+02:00</published>
+    <updated>2025-06-05T10:00:00Z</updated>
+    <author><name>Alex Writer</name></author>
+    <category term="creators" label="Creators"/>
+    <summary type="text">First entry with &lt;tags&gt; in plain text.</summary>
+    <content type="xhtml"><div xmlns="http://www.w3.org/1999/xhtml"><p>Hello <strong>Atom</strong>.</p><script>alert(1)</script></div></content>
+  </entry>
+  <entry>
+    <title>Entry two</title>
+    <link href="https://atom.example/posts/two"/>
+    <id>tag:atom.example,2025:2</id>
+    <updated>2025-06-04T08:00:00Z</updated>
+    <summary>Second entry, no media.</summary>
+  </entry>
+</feed>

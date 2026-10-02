@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<rss version="2.0"><channel><title>Bad dates</title><link>https://dates.example/</link>
+<item><title>Bad date item</title><link>https://dates.example/1</link><guid>bad-date-1</guid><pubDate>the 32nd of Smarch, sometime</pubDate><description>x</description></item>
+<item><title>Future date item</title><link>https://dates.example/2</link><guid>bad-date-2</guid><pubDate>Fri, 01 Jan 2100 00:00:00 GMT</pubDate><description>y</description></item>
+</channel></rss>

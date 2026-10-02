@@ -1,0 +1,267 @@
+[
+  {
+    "name": "admin login",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "admin page rmh-dashboard",
+    "ok": true,
+    "detail": "RSS Media Hub"
+  },
+  {
+    "name": "admin page rmh-feeds",
+    "ok": true,
+    "detail": "Feed Manager"
+  },
+  {
+    "name": "admin page rmh-queue",
+    "ok": true,
+    "detail": "Import Queue"
+  },
+  {
+    "name": "admin page rmh-media",
+    "ok": true,
+    "detail": "Media Library"
+  },
+  {
+    "name": "admin page rmh-moderation",
+    "ok": true,
+    "detail": "Reports & Moderation"
+  },
+  {
+    "name": "admin page rmh-restrictions",
+    "ok": true,
+    "detail": "Source Restrictions"
+  },
+  {
+    "name": "admin page rmh-settings",
+    "ok": true,
+    "detail": "RSS Media Hub Settings"
+  },
+  {
+    "name": "admin page rmh-logs",
+    "ok": true,
+    "detail": "Logs & Diagnostics"
+  },
+  {
+    "name": "add feed via form: MRSS Network",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "add feed via form: Embeds",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "add feed via form: Photo Sets",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "add feed via form: Night Stories",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "feed test (dry run) report",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "wp-cron.php executes queued run",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "posts imported by scheduled run",
+    "ok": true,
+    "detail": "published=5"
+  },
+  {
+    "name": "import history recorded",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "REST cookie request without nonce rejected (CSRF)",
+    "ok": true,
+    "detail": "status=401"
+  },
+  {
+    "name": "REST with nonce succeeds",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "REST responses are no-store",
+    "ok": true,
+    "detail": "no-cache, must-revalidate, max-age=0, no-store, private"
+  },
+  {
+    "name": "admin-post with forged nonce rejected",
+    "ok": true,
+    "detail": "status=403"
+  },
+  {
+    "name": "admin dashboard fits mobile width",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "admin queue table stacks on mobile",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "archive /media/ responds 200",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "archive shows media cards",
+    "ok": true,
+    "detail": "cards=5"
+  },
+  {
+    "name": "archive fits mobile width",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "archive has no inline players",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "filter by media type + list view",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "single video post 200",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "frame-src CSP limited to allowlisted providers",
+    "ok": true,
+    "detail": "frame-src https://www.youtube-nocookie.com https://player.vimeo.com https://www.dailymotion.com; object-src 'none'; base-uri 'self'; form-action 'self'"
+  },
+  {
+    "name": "video player visible and within viewport",
+    "ok": true,
+    "detail": "{\"x\":16,\"y\":189.71875,\"width\":358,\"height\":201.375}"
+  },
+  {
+    "name": "video loads metadata (HTML5 player works)",
+    "ok": true,
+    "detail": "{\"readyState\":4,\"src\":\"https://cdn.mrss.example/feature/1080.webm\",\"playsinline\":true,\"w\":1280}"
+  },
+  {
+    "name": "video uses playsinline for iOS",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "single post fits mobile width",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "attribution visible",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "embed iframe sized to viewport",
+    "ok": true,
+    "detail": "{\"x\":16,\"y\":189.71875,\"width\":358,\"height\":201.375}"
+  },
+  {
+    "name": "embed iframe is sandboxed",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "untrusted iframe not rendered",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "gallery renders thumbnails",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "lightbox opens",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "lightbox keyboard navigation",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "lightbox closes with Escape",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "audio player rendered",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "report form submits in place",
+    "ok": true,
+    "detail": "Thank you. Your report was received."
+  },
+  {
+    "name": "feed directory page",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "directory does not expose feed URLs",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "no console errors on public pages",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "settings saved via Settings API",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "age gate shown to unverified visitor",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "no media URL leaked before verification",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "gate response not cacheable",
+    "ok": true,
+    "detail": "private, no-store, max-age=0"
+  },
+  {
+    "name": "after confirmation the media page loads",
+    "ok": true,
+    "detail": "http://localhost:8089/media/feature-presentation/"
+  },
+  {
+    "name": "no console errors in admin",
+    "ok": true,
+    "detail": ""
+  }
+]

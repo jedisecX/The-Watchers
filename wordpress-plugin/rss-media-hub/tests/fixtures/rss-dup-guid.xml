@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<rss version="2.0"><channel><title>Dupes</title><link>https://dupe.example/</link>
+<item><title>Same GUID first</title><link>https://dupe.example/a</link><guid>same-guid</guid><pubDate>Mon, 02 Jun 2025 08:00:00 GMT</pubDate><enclosure url="https://cdn.dupe.example/a.mp4" type="video/mp4" length="1"/></item>
+<item><title>Same GUID second</title><link>https://dupe.example/b</link><guid>same-guid</guid><pubDate>Mon, 02 Jun 2025 09:00:00 GMT</pubDate><enclosure url="https://cdn.dupe.example/b.mp4" type="video/mp4" length="1"/></item>
+</channel></rss>

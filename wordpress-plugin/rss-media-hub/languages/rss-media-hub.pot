@@ -1,0 +1,2702 @@
+# Copyright (C) The Watchers
+# This file is distributed under the GPL-2.0-or-later.
+msgid ""
+msgstr ""
+"Project-Id-Version: RSS Media Hub 1.0.0\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Domain: rss-media-hub\n"
+
+#: templates/directory.php:24 includes/PostTypes.php:166 includes/Frontend/Frontend.php:280
+msgid "Sources"
+msgstr ""
+
+#: templates/directory.php:25
+msgid "Back to all media"
+msgstr ""
+
+#: templates/directory.php:28
+msgid "No sources are configured yet."
+msgstr ""
+
+#: templates/directory.php:37
+msgid "Updating normally"
+msgstr ""
+
+#: templates/directory.php:38
+msgid "Updating with warnings"
+msgstr ""
+
+#: templates/directory.php:39
+msgid "Temporarily not updating"
+msgstr ""
+
+#: templates/directory.php:53
+msgid "%s post"
+msgid_plural "%s posts"
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/directory.php:59
+msgid "Updated %s ago"
+msgstr ""
+
+#: templates/directory.php:64
+msgid "Website"
+msgstr ""
+
+#: templates/blocked.php:15
+msgid "Not available in your region"
+msgstr ""
+
+#: templates/blocked.php:16
+msgid "This content is not available in your country or region."
+msgstr ""
+
+#: templates/archive.php:17 includes/Frontend/Reader.php:206
+msgid "Latest media"
+msgstr ""
+
+#: templates/age-gate.php:21
+msgid "Adults only (%d+)"
+msgstr ""
+
+#: templates/age-gate.php:24
+msgid "This page contains sexually explicit material intended for adults only."
+msgstr ""
+
+#: templates/single.php:57
+msgid "Read the original at %s"
+msgstr ""
+
+#: templates/single.php:69
+msgid "Categories:"
+msgstr ""
+
+#: templates/single.php:72
+msgid "Tags:"
+msgstr ""
+
+#: templates/single.php:77
+msgid "Share"
+msgstr ""
+
+#: templates/single.php:78
+msgid "Share:"
+msgstr ""
+
+#: templates/single.php:82
+msgid "Copy link"
+msgstr ""
+
+#: templates/single.php:92
+msgid "More media"
+msgstr ""
+
+#: templates/single.php:100
+msgid "Related"
+msgstr ""
+
+#: templates/parts/report-form.php:18
+msgid "Report this post / broken media"
+msgstr ""
+
+#: templates/parts/report-form.php:20
+msgid "Thank you. Your report was received and will be reviewed."
+msgstr ""
+
+#: templates/parts/report-form.php:22
+msgid "Your report could not be submitted. Please try again later."
+msgstr ""
+
+#: templates/parts/report-form.php:29 includes/Admin/RestrictionsPage.php:74 includes/Admin/RestrictionsPage.php:80
+msgid "Reason"
+msgstr ""
+
+#: templates/parts/report-form.php:37
+msgid "Details (optional)"
+msgstr ""
+
+#: templates/parts/report-form.php:41
+msgid "Contact for follow-up (optional, for removal requests)"
+msgstr ""
+
+#: templates/parts/report-form.php:44
+msgid "Send report"
+msgstr ""
+
+#: templates/parts/media-video.php:25
+msgid "Your browser cannot play this video."
+msgstr ""
+
+#: templates/parts/media-video.php:26
+msgid "Open the video file"
+msgstr ""
+
+#: templates/parts/media-fallback.php:22
+msgid "This media is currently unavailable at its source."
+msgstr ""
+
+#: templates/parts/media-fallback.php:24
+msgid "This media is hosted by the original publisher."
+msgstr ""
+
+#: templates/parts/media-fallback.php:26
+msgid "This media cannot be played here."
+msgstr ""
+
+#: templates/parts/media-fallback.php:34
+msgid "View at %s"
+msgstr ""
+
+#: templates/parts/media-audio.php:19
+msgid "Track %d"
+msgstr ""
+
+#: templates/parts/media-audio.php:23
+msgid "Download audio"
+msgstr ""
+
+#: templates/parts/reader.php:34
+msgid "Newest"
+msgstr ""
+
+#: templates/parts/reader.php:35
+msgid "Oldest"
+msgstr ""
+
+#: templates/parts/reader.php:36
+msgid "Title (A–Z)"
+msgstr ""
+
+#: templates/parts/reader.php:37
+msgid "Source publication date"
+msgstr ""
+
+#: templates/parts/reader.php:40
+msgid "Relevance"
+msgstr ""
+
+#: templates/parts/reader.php:46
+msgid "Browse sources"
+msgstr ""
+
+#: templates/parts/reader.php:49
+msgid "Filter media"
+msgstr ""
+
+#: templates/parts/reader.php:51 includes/Admin/QueuePage.php:88 includes/Admin/FeedsPage.php:94 includes/Admin/MediaPage.php:73 includes/Admin/LogsPage.php:108
+msgid "Search"
+msgstr ""
+
+#: templates/parts/reader.php:55 includes/Admin/RestrictionsPage.php:42 includes/Admin/RestrictionsPage.php:74 includes/Admin/RestrictionsPage.php:78
+msgid "Type"
+msgstr ""
+
+#: templates/parts/reader.php:57 includes/Admin/RestrictionsPage.php:67 includes/Admin/MediaPage.php:59
+msgid "All types"
+msgstr ""
+
+#: templates/parts/reader.php:65 includes/Admin/FeedsPage.php:266 includes/PostTypes.php:167
+msgid "Source"
+msgstr ""
+
+#: templates/parts/reader.php:67
+msgid "All sources"
+msgstr ""
+
+#: templates/parts/reader.php:76
+msgid "Category"
+msgstr ""
+
+#: templates/parts/reader.php:78
+msgid "All categories"
+msgstr ""
+
+#: templates/parts/reader.php:86
+msgid "Tag"
+msgstr ""
+
+#: templates/parts/reader.php:90
+msgid "Sort"
+msgstr ""
+
+#: templates/parts/reader.php:99 includes/Admin/QueuePage.php:118 includes/Admin/ModerationPage.php:124
+msgid "Apply"
+msgstr ""
+
+#: templates/parts/reader.php:100
+msgid "Reset"
+msgstr ""
+
+#: templates/parts/reader.php:108
+msgid "%s result"
+msgid_plural "%s results"
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/parts/reader.php:111 includes/Admin/QueuePage.php:142
+msgid "View"
+msgstr ""
+
+#: templates/parts/reader.php:112 includes/Admin/SettingsPage.php:137
+msgid "Grid"
+msgstr ""
+
+#: templates/parts/reader.php:113
+msgid "Reader"
+msgstr ""
+
+#: templates/parts/reader.php:130
+msgid "Pages"
+msgstr ""
+
+#: templates/parts/reader.php:138
+msgid "&larr; Newer"
+msgstr ""
+
+#: templates/parts/reader.php:139
+msgid "Older &rarr;"
+msgstr ""
+
+#: templates/parts/reader.php:148
+msgid "Load more"
+msgstr ""
+
+#: templates/parts/reader.php:156
+msgid "Nothing here yet"
+msgstr ""
+
+#: templates/parts/reader.php:160
+msgid "No media matches these filters. Try removing a filter or searching for something else."
+msgstr ""
+
+#: templates/parts/reader.php:162
+msgid "No media has been published yet. New items appear here automatically as feeds are imported."
+msgstr ""
+
+#: templates/parts/media-gallery.php:12
+msgid "Gallery of %d image"
+msgid_plural "Gallery of %d images"
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/parts/media-embed.php:28
+msgid "Watch on %s"
+msgstr ""
+
+#: templates/parts/media-embed.php:28
+msgid "the source site"
+msgstr ""
+
+#: includes/Rest/RestController.php:572 includes/Rest/RestController.php:603 includes/Rest/RestController.php:622 includes/Rest/RestController.php:651 includes/Db/FeedRepository.php:139
+msgid "Feed not found."
+msgstr ""
+
+#: includes/Rest/RestController.php:608
+msgid "Imported posts were kept."
+msgstr ""
+
+#: includes/Rest/RestController.php:723 includes/Admin/Actions.php:311
+msgid "Media not found."
+msgstr ""
+
+#: includes/Rest/RestController.php:802 includes/Rest/RestController.php:857
+msgid "Not found."
+msgstr ""
+
+#: includes/Rest/RestController.php:853
+msgid "Analytics disabled."
+msgstr ""
+
+#: includes/Db/Blocklist.php:78
+msgid "Unknown restriction type."
+msgstr ""
+
+#: includes/Db/Blocklist.php:82
+msgid "The value is not valid for this restriction type."
+msgstr ""
+
+#: includes/Db/Blocklist.php:99
+msgid "This restriction already exists."
+msgstr ""
+
+#: includes/Db/FeedRepository.php:67
+msgid "The feed URL is too long."
+msgstr ""
+
+#: includes/Db/FeedRepository.php:71
+msgid "Enter an absolute http:// or https:// feed URL."
+msgstr ""
+
+#: includes/Db/FeedRepository.php:74
+msgid "Do not put credentials in the URL; use the feed authentication fields instead."
+msgstr ""
+
+#: includes/Db/FeedRepository.php:93 includes/Db/FeedRepository.php:149
+msgid "This feed URL is already registered."
+msgstr ""
+
+#: includes/Db/FeedRepository.php:121
+msgid "The feed could not be saved."
+msgstr ""
+
+#: includes/Db/ReportRepository.php:30
+msgid "Media is broken or unavailable"
+msgstr ""
+
+#: includes/Db/ReportRepository.php:31
+msgid "Copyright / removal request"
+msgstr ""
+
+#: includes/Db/ReportRepository.php:32
+msgid "Non-consensual content"
+msgstr ""
+
+#: includes/Db/ReportRepository.php:33
+msgid "Involves a minor (suspected CSAM)"
+msgstr ""
+
+#: includes/Db/ReportRepository.php:34
+msgid "Other illegal content"
+msgstr ""
+
+#: includes/Db/ReportRepository.php:35
+msgid "Wrong content label / missing warning"
+msgstr ""
+
+#: includes/Db/ReportRepository.php:36
+msgid "Other"
+msgstr ""
+
+#: includes/Compliance/AccessControl.php:147
+msgid "Your session expired. Please go back and try again."
+msgstr ""
+
+#: includes/Compliance/AccessControl.php:180 includes/Frontend/Frontend.php:188
+msgid "Thank you. Your report was received."
+msgstr ""
+
+#: includes/Compliance/Reports.php:35
+msgid "Reporting is disabled."
+msgstr ""
+
+#: includes/Compliance/Reports.php:38
+msgid "Report rejected."
+msgstr ""
+
+#: includes/Compliance/Reports.php:43
+msgid "Unknown post."
+msgstr ""
+
+#: includes/Compliance/Reports.php:48
+msgid "Choose a valid reason."
+msgstr ""
+
+#: includes/Compliance/Reports.php:51
+msgid "Too many reports. Please try again later."
+msgstr ""
+
+#: includes/Compliance/Reports.php:145
+msgid "Report not found."
+msgstr ""
+
+#: includes/Compliance/Reports.php:183
+msgid "The report is not linked to an imported item."
+msgstr ""
+
+#: includes/Compliance/Reports.php:196
+msgid "Unknown moderation action."
+msgstr ""
+
+#: includes/Compliance/Reports.php:218
+msgid "Content report requires review"
+msgstr ""
+
+#: includes/Compliance/Reports.php:221
+msgid "A content report requires moderator review."
+msgstr ""
+
+#: includes/Compliance/Reports.php:222 includes/Admin/ModerationPage.php:74 includes/Admin/ModerationPage.php:84
+msgid "Report"
+msgstr ""
+
+#: includes/Compliance/Reports.php:224 includes/Admin/MediaPage.php:94 includes/Admin/MediaPage.php:123 includes/Admin/ModerationPage.php:75 includes/Admin/ModerationPage.php:85
+msgid "Post"
+msgstr ""
+
+#: includes/Compliance/Reports.php:226 includes/Admin/LogsPage.php:192
+msgid "Review"
+msgstr ""
+
+#: includes/Compliance/Reports.php:228
+msgid "The post has been unpublished automatically. Do not delete it: follow your escalation procedure (e.g. report suspected CSAM to NCMEC/CyberTipline, the IWF or your national hotline/law enforcement) before removing evidence."
+msgstr ""
+
+#: includes/Compliance/SelfDeclarationVerifier.php:50
+msgid "Self-declaration (confirmation button – not legal age verification)"
+msgstr ""
+
+#: includes/Compliance/SelfDeclarationVerifier.php:90 includes/Frontend/Frontend.php:196
+msgid "I am %d or older – enter"
+msgstr ""
+
+#: includes/Compliance/SelfDeclarationVerifier.php:93 includes/Frontend/Frontend.php:197
+msgid "Leave"
+msgstr ""
+
+#: includes/Compliance/SelfDeclarationVerifier.php:98
+msgid "By entering you confirm that you are at least %d years old and that viewing adult material is legal where you are."
+msgstr ""
+
+#: includes/Compliance/SelfDeclarationVerifier.php:114
+msgid "Age confirmation declined."
+msgstr ""
+
+#: includes/Cron/Scheduler.php:69
+msgid "Every 5 minutes (RSS Media Hub)"
+msgstr ""
+
+#: includes/Admin/RestrictionsPage.php:22 includes/Admin/QueuePage.php:25 includes/Admin/DashboardPage.php:24 includes/Admin/FeedsPage.php:26 includes/Admin/SettingsPage.php:288
+msgid "You do not have permission to view this page."
+msgstr ""
+
+#: includes/Admin/RestrictionsPage.php:27
+msgid "Domain (includes subdomains)"
+msgstr ""
+
+#: includes/Admin/RestrictionsPage.php:28
+msgid "Exact URL"
+msgstr ""
+
+#: includes/Admin/RestrictionsPage.php:29
+msgid "Item GUID"
+msgstr ""
+
+#: includes/Admin/RestrictionsPage.php:30
+msgid "Title keyword"
+msgstr ""
+
+#: includes/Admin/RestrictionsPage.php:32 includes/Admin/Admin.php:57
+msgid "Source Restrictions"
+msgstr ""
+
+#: includes/Admin/RestrictionsPage.php:37
+msgid "Add restriction"
+msgstr ""
+
+#: includes/Admin/RestrictionsPage.php:38
+msgid "Blocked sources are never fetched, matching items are not imported, and matching media is never embedded or downloaded."
+msgstr ""
+
+#: includes/Admin/RestrictionsPage.php:43 includes/Admin/RestrictionsPage.php:74 includes/Admin/RestrictionsPage.php:79
+msgid "Value"
+msgstr ""
+
+#: includes/Admin/RestrictionsPage.php:44
+msgid "Reason (internal)"
+msgstr ""
+
+#: includes/Admin/RestrictionsPage.php:45
+msgid "Add"
+msgstr ""
+
+#: includes/Admin/RestrictionsPage.php:51
+msgid "Removal request / disputed content"
+msgstr ""
+
+#: includes/Admin/RestrictionsPage.php:52
+msgid "Enter the original source URL from a removal request (e.g. a copyright notice). Every imported item with that canonical URL is unpublished, its GUID and URL are blocked from re-import, and the action is logged."
+msgstr ""
+
+#: includes/Admin/RestrictionsPage.php:53
+msgid "Take down all items with this source URL?"
+msgstr ""
+
+#: includes/Admin/RestrictionsPage.php:56 includes/Admin/QueuePage.php:153
+msgid "Source URL"
+msgstr ""
+
+#: includes/Admin/RestrictionsPage.php:57
+msgid "Reference / reason"
+msgstr ""
+
+#: includes/Admin/RestrictionsPage.php:57
+msgid "e.g. DMCA notice 2026-10-02"
+msgstr ""
+
+#: includes/Admin/RestrictionsPage.php:58 includes/Admin/QueuePage.php:230
+msgid "Take down"
+msgstr ""
+
+#: includes/Admin/RestrictionsPage.php:64
+msgid "Current restrictions"
+msgstr ""
+
+#: includes/Admin/RestrictionsPage.php:68 includes/Admin/QueuePage.php:89 includes/Admin/FeedsPage.php:96 includes/Admin/MediaPage.php:74 includes/Admin/LogsPage.php:109
+msgid "Filter"
+msgstr ""
+
+#: includes/Admin/RestrictionsPage.php:71
+msgid "No restrictions defined."
+msgstr ""
+
+#: includes/Admin/RestrictionsPage.php:74 includes/Admin/RestrictionsPage.php:81
+msgid "Added"
+msgstr ""
+
+#: includes/Admin/RestrictionsPage.php:82 includes/Admin/FeedsPage.php:200
+msgid "Remove"
+msgstr ""
+
+#: includes/Admin/QueuePage.php:51 includes/Admin/LogsPage.php:49
+msgid "All feeds"
+msgstr ""
+
+#: includes/Admin/QueuePage.php:56 includes/Admin/Admin.php:54
+msgid "Import Queue"
+msgstr ""
+
+#: includes/Admin/QueuePage.php:59
+msgid "Needs attention"
+msgstr ""
+
+#: includes/Admin/QueuePage.php:60
+msgid "Awaiting approval"
+msgstr ""
+
+#: includes/Admin/QueuePage.php:61
+msgid "Pending posts"
+msgstr ""
+
+#: includes/Admin/QueuePage.php:62
+msgid "Published"
+msgstr ""
+
+#: includes/Admin/QueuePage.php:63
+msgid "Failed"
+msgstr ""
+
+#: includes/Admin/QueuePage.php:64 includes/Admin/LogsPage.php:189
+msgid "Duplicates"
+msgstr ""
+
+#: includes/Admin/QueuePage.php:65
+msgid "Skipped"
+msgstr ""
+
+#: includes/Admin/QueuePage.php:66
+msgid "Blocked"
+msgstr ""
+
+#: includes/Admin/QueuePage.php:67
+msgid "Rejected"
+msgstr ""
+
+#: includes/Admin/QueuePage.php:68
+msgid "Removed"
+msgstr ""
+
+#: includes/Admin/QueuePage.php:69
+msgid "All"
+msgstr ""
+
+#: includes/Admin/QueuePage.php:82 includes/Admin/QueuePage.php:125 includes/Admin/QueuePage.php:177 includes/Admin/DashboardPage.php:101 includes/Admin/DashboardPage.php:109
+msgid "Feed"
+msgstr ""
+
+#: includes/Admin/QueuePage.php:84
+msgid "Media type"
+msgstr ""
+
+#: includes/Admin/QueuePage.php:85
+msgid "All media types"
+msgstr ""
+
+#: includes/Admin/QueuePage.php:86
+msgid "From"
+msgstr ""
+
+#: includes/Admin/QueuePage.php:87
+msgid "To"
+msgstr ""
+
+#: includes/Admin/QueuePage.php:88
+msgid "Title or URL"
+msgstr ""
+
+#: includes/Admin/QueuePage.php:93
+msgid "No items in this view."
+msgstr ""
+
+#: includes/Admin/QueuePage.php:102
+msgid "Bulk action"
+msgstr ""
+
+#: includes/Admin/QueuePage.php:108
+msgid "Bulk actions"
+msgstr ""
+
+#: includes/Admin/QueuePage.php:109 includes/Admin/QueuePage.php:191
+msgid "Approve & publish"
+msgstr ""
+
+#: includes/Admin/QueuePage.php:110 includes/Admin/QueuePage.php:202
+msgid "Reject"
+msgstr ""
+
+#: includes/Admin/QueuePage.php:111 includes/Admin/QueuePage.php:212
+msgid "Retry"
+msgstr ""
+
+#: includes/Admin/QueuePage.php:123 includes/Admin/MediaPage.php:90
+msgid "Select all"
+msgstr ""
+
+#: includes/Admin/QueuePage.php:124 includes/Admin/QueuePage.php:139
+msgid "Item"
+msgstr ""
+
+#: includes/Admin/QueuePage.php:126 includes/Admin/QueuePage.php:178 includes/Admin/DashboardPage.php:67 includes/Admin/FeedsPage.php:61 includes/Admin/FeedsPage.php:108
+msgid "Status"
+msgstr ""
+
+#: includes/Admin/QueuePage.php:127 includes/Admin/QueuePage.php:163 includes/Admin/QueuePage.php:179 includes/Admin/FeedsPage.php:390 includes/Admin/SettingsPage.php:33
+msgid "Media"
+msgstr ""
+
+#: includes/Admin/QueuePage.php:128 includes/Admin/QueuePage.php:180
+msgid "Discovered"
+msgstr ""
+
+#: includes/Admin/QueuePage.php:129 includes/Admin/QueuePage.php:181 includes/Admin/FeedsPage.php:113 includes/Admin/FeedsPage.php:156 includes/Admin/MediaPage.php:95
+msgid "Actions"
+msgstr ""
+
+#: includes/Admin/QueuePage.php:138
+msgid "Select item"
+msgstr ""
+
+#: includes/Admin/QueuePage.php:142
+msgid "Edit post"
+msgstr ""
+
+#: includes/Admin/QueuePage.php:145
+msgid "Duplicate of item #%d (same canonical URL)"
+msgstr ""
+
+#: includes/Admin/QueuePage.php:151
+msgid "Preview metadata and media"
+msgstr ""
+
+#: includes/Admin/QueuePage.php:155
+msgid "Published (source)"
+msgstr ""
+
+#: includes/Admin/QueuePage.php:155
+msgid "missing or invalid"
+msgstr ""
+
+#: includes/Admin/QueuePage.php:156
+msgid "Authors"
+msgstr ""
+
+#: includes/Admin/QueuePage.php:157 includes/Admin/FeedsPage.php:371
+msgid "Categories"
+msgstr ""
+
+#: includes/Admin/QueuePage.php:158 includes/PostTypes.php:243
+msgid "Rating"
+msgstr ""
+
+#: includes/Admin/QueuePage.php:159
+msgid "Summary"
+msgstr ""
+
+#: includes/Admin/QueuePage.php:161
+msgid "Extraction notes"
+msgstr ""
+
+#: includes/Admin/QueuePage.php:165
+msgid "None"
+msgstr ""
+
+#: includes/Admin/QueuePage.php:178
+msgid "attempt %1$d/%2$d"
+msgstr ""
+
+#: includes/Admin/QueuePage.php:221
+msgid "Re-extract media"
+msgstr ""
+
+#: includes/Admin/QueuePage.php:232
+msgid "Take this item down and block it from being re-imported?"
+msgstr ""
+
+#: includes/Admin/DashboardPage.php:39
+msgid "Run all feeds now"
+msgstr ""
+
+#: includes/Admin/DashboardPage.php:40
+msgid "Retry failed"
+msgstr ""
+
+#: includes/Admin/DashboardPage.php:42 includes/Admin/Admin.php:43 includes/Admin/Admin.php:44
+msgid "RSS Media Hub"
+msgstr ""
+
+#: includes/Admin/DashboardPage.php:45
+msgid "Total feeds"
+msgstr ""
+
+#: includes/Admin/DashboardPage.php:46
+msgid "Active feeds"
+msgstr ""
+
+#: includes/Admin/DashboardPage.php:47
+msgid "Paused / disabled"
+msgstr ""
+
+#: includes/Admin/DashboardPage.php:48
+msgid "Items discovered"
+msgstr ""
+
+#: includes/Admin/DashboardPage.php:49
+msgid "Published posts"
+msgstr ""
+
+#: includes/Admin/DashboardPage.php:50
+msgid "Awaiting review"
+msgstr ""
+
+#: includes/Admin/DashboardPage.php:51
+msgid "Failed imports"
+msgstr ""
+
+#: includes/Admin/DashboardPage.php:52
+msgid "Open reports"
+msgstr ""
+
+#: includes/Admin/DashboardPage.php:63 includes/Admin/LogsPage.php:28 includes/Admin/LogsPage.php:79
+msgid "Scheduling"
+msgstr ""
+
+#: includes/Admin/DashboardPage.php:64
+msgid "Last successful poll"
+msgstr ""
+
+#: includes/Admin/DashboardPage.php:65 includes/Admin/LogsPage.php:223
+msgid "Last run"
+msgstr ""
+
+#: includes/Admin/DashboardPage.php:66
+msgid "Next scheduled run"
+msgstr ""
+
+#: includes/Admin/DashboardPage.php:66 includes/Admin/LogsPage.php:222
+msgid "not scheduled"
+msgstr ""
+
+#: includes/Admin/DashboardPage.php:67
+msgid "overdue"
+msgstr ""
+
+#: includes/Admin/DashboardPage.php:67
+msgid "on schedule"
+msgstr ""
+
+#: includes/Admin/DashboardPage.php:67
+msgid "run in progress"
+msgstr ""
+
+#: includes/Admin/DashboardPage.php:68
+msgid "Overdue feeds"
+msgstr ""
+
+#: includes/Admin/DashboardPage.php:69
+msgid "Disabled (DISABLE_WP_CRON) – a system cron job is required."
+msgstr ""
+
+#: includes/Admin/DashboardPage.php:69 includes/Admin/SettingsPage.php:231
+msgid "Enabled"
+msgstr ""
+
+#: includes/Admin/DashboardPage.php:75
+msgid "Media types"
+msgstr ""
+
+#: includes/Admin/DashboardPage.php:77
+msgid "No imported items yet."
+msgstr ""
+
+#: includes/Admin/DashboardPage.php:97
+msgid "Recent import activity"
+msgstr ""
+
+#: includes/Admin/DashboardPage.php:99
+msgid "No imports have run yet. Add a feed in the Feed Manager; the first poll happens within a few minutes."
+msgstr ""
+
+#: includes/Admin/DashboardPage.php:101 includes/Admin/DashboardPage.php:108
+msgid "When"
+msgstr ""
+
+#: includes/Admin/DashboardPage.php:101 includes/Admin/DashboardPage.php:110 includes/Admin/FeedsPage.php:523
+msgid "Outcome"
+msgstr ""
+
+#: includes/Admin/DashboardPage.php:101 includes/Admin/DashboardPage.php:111 includes/Admin/LogsPage.php:188
+msgid "New"
+msgstr ""
+
+#: includes/Admin/DashboardPage.php:101 includes/Admin/DashboardPage.php:112 includes/Admin/LogsPage.php:190
+msgid "Created"
+msgstr ""
+
+#: includes/Admin/DashboardPage.php:114
+msgid "Full import history"
+msgstr ""
+
+#: includes/Admin/DashboardPage.php:126
+msgid "Feeds with errors"
+msgstr ""
+
+#: includes/Admin/FeedsPage.php:57 includes/Admin/Admin.php:53
+msgid "Feed Manager"
+msgstr ""
+
+#: includes/Admin/FeedsPage.php:57 includes/Admin/FeedsPage.php:100 includes/Admin/FeedsPage.php:259
+msgid "Add feed"
+msgstr ""
+
+#: includes/Admin/FeedsPage.php:67 includes/Admin/ModerationPage.php:51
+msgid "All statuses"
+msgstr ""
+
+#: includes/Admin/FeedsPage.php:68 includes/Admin/FeedsPage.php:282
+msgid "Active"
+msgstr ""
+
+#: includes/Admin/FeedsPage.php:69 includes/Admin/FeedsPage.php:283
+msgid "Paused"
+msgstr ""
+
+#: includes/Admin/FeedsPage.php:70 includes/Admin/FeedsPage.php:284
+msgid "Disabled"
+msgstr ""
+
+#: includes/Admin/FeedsPage.php:77 includes/Admin/FeedsPage.php:109 includes/Admin/FeedsPage.php:140 includes/Admin/FeedsPage.php:468 includes/Admin/FeedsPage.php:469
+msgid "Health"
+msgstr ""
+
+#: includes/Admin/FeedsPage.php:83
+msgid "Any health"
+msgstr ""
+
+#: includes/Admin/FeedsPage.php:85 includes/Admin/FeedsPage.php:529
+msgid "Warning"
+msgstr ""
+
+#: includes/Admin/FeedsPage.php:86
+msgid "Error"
+msgstr ""
+
+#: includes/Admin/FeedsPage.php:87
+msgid "Not polled yet"
+msgstr ""
+
+#: includes/Admin/FeedsPage.php:95
+msgid "Search name or URL"
+msgstr ""
+
+#: includes/Admin/FeedsPage.php:100
+msgid "No feeds match. Add your first RSS or Atom feed to start importing."
+msgstr ""
+
+#: includes/Admin/FeedsPage.php:110 includes/Admin/FeedsPage.php:141 includes/Admin/FeedsPage.php:471
+msgid "Last success"
+msgstr ""
+
+#: includes/Admin/FeedsPage.php:111 includes/Admin/FeedsPage.php:142 includes/Admin/FeedsPage.php:472
+msgid "Next poll"
+msgstr ""
+
+#: includes/Admin/FeedsPage.php:112 includes/Admin/FeedsPage.php:143
+msgid "Items"
+msgstr ""
+
+#: includes/Admin/FeedsPage.php:165
+msgid "Test"
+msgstr ""
+
+#: includes/Admin/FeedsPage.php:173
+msgid "Run now"
+msgstr ""
+
+#: includes/Admin/FeedsPage.php:182
+msgid "Pause"
+msgstr ""
+
+#: includes/Admin/FeedsPage.php:191
+msgid "Resume"
+msgstr ""
+
+#: includes/Admin/FeedsPage.php:202
+msgid "Remove this feed? Imported posts are kept."
+msgstr ""
+
+#: includes/Admin/FeedsPage.php:224
+msgid "Feed not found"
+msgstr ""
+
+#: includes/Admin/FeedsPage.php:225
+msgid "Back to feeds"
+msgstr ""
+
+#: includes/Admin/FeedsPage.php:239
+msgid "Use global setting"
+msgstr ""
+
+#: includes/Admin/FeedsPage.php:241
+msgid "Use global default"
+msgstr ""
+
+#: includes/Admin/FeedsPage.php:242
+msgid "Every 15 minutes"
+msgstr ""
+
+#: includes/Admin/FeedsPage.php:243
+msgid "Every 30 minutes"
+msgstr ""
+
+#: includes/Admin/FeedsPage.php:244
+msgid "Hourly"
+msgstr ""
+
+#: includes/Admin/FeedsPage.php:245
+msgid "Every 3 hours"
+msgstr ""
+
+#: includes/Admin/FeedsPage.php:246
+msgid "Every 6 hours"
+msgstr ""
+
+#: includes/Admin/FeedsPage.php:247
+msgid "Twice daily"
+msgstr ""
+
+#: includes/Admin/FeedsPage.php:248
+msgid "Daily"
+msgstr ""
+
+#: includes/Admin/FeedsPage.php:249
+msgid "Custom…"
+msgstr ""
+
+#: includes/Admin/FeedsPage.php:259
+msgid "Edit feed: %s"
+msgstr ""
+
+#: includes/Admin/FeedsPage.php:268 includes/Admin/LogsPage.php:253
+msgid "Feed URL"
+msgstr ""
+
+#: includes/Admin/FeedsPage.php:270
+msgid "RSS 2.0, RSS 1.0/RDF or Atom. Private, loopback and link-local destinations are refused."
+msgstr ""
+
+#: includes/Admin/FeedsPage.php:271
+msgid "Name"
+msgstr ""
+
+#: includes/Admin/FeedsPage.php:272
+msgid "Shown in source attribution. Defaults to the host name."
+msgstr ""
+
+#: includes/Admin/FeedsPage.php:273
+msgid "Website URL"
+msgstr ""
+
+#: includes/Admin/FeedsPage.php:274
+msgid "Optional; detected from the feed when empty."
+msgstr ""
+
+#: includes/Admin/FeedsPage.php:292
+msgid "Polling interval"
+msgstr ""
+
+#: includes/Admin/FeedsPage.php:294
+msgid "minutes"
+msgstr ""
+
+#: includes/Admin/FeedsPage.php:295
+msgid "Authentication"
+msgstr ""
+
+#: includes/Admin/FeedsPage.php:296
+msgid "User"
+msgstr ""
+
+#: includes/Admin/FeedsPage.php:297
+msgid "Password"
+msgstr ""
+
+#: includes/Admin/FeedsPage.php:297
+msgid "(saved – leave blank to keep)"
+msgstr ""
+
+#: includes/Admin/FeedsPage.php:301
+msgid "Clear saved password"
+msgstr ""
+
+#: includes/Admin/FeedsPage.php:302
+msgid "Optional HTTP Basic credentials, stored encrypted and only sent to the feed's own origin. Never bypass access restrictions you are not authorized to use."
+msgstr ""
+
+#: includes/Admin/FeedsPage.php:305
+msgid "Import and publishing"
+msgstr ""
+
+#: includes/Admin/FeedsPage.php:307
+msgid "Import mode"
+msgstr ""
+
+#: includes/Admin/FeedsPage.php:314 includes/Admin/SettingsPage.php:120
+msgid "Automatic publishing"
+msgstr ""
+
+#: includes/Admin/FeedsPage.php:315
+msgid "Pending review (create draft/pending posts)"
+msgstr ""
+
+#: includes/Admin/FeedsPage.php:316
+msgid "Manual (queue only, publish on approval)"
+msgstr ""
+
+#: includes/Admin/FeedsPage.php:323 includes/Admin/SettingsPage.php:49
+msgid "Content mode"
+msgstr ""
+
+#: includes/Admin/FeedsPage.php:330 includes/Admin/SettingsPage.php:123
+msgid "Articles with or without media"
+msgstr ""
+
+#: includes/Admin/FeedsPage.php:331
+msgid "Media only (skip items without qualifying media)"
+msgstr ""
+
+#: includes/Admin/FeedsPage.php:338 includes/Admin/SettingsPage.php:50
+msgid "Article text"
+msgstr ""
+
+#: includes/Admin/FeedsPage.php:345
+msgid "Excerpt only (recommended)"
+msgstr ""
+
+#: includes/Admin/FeedsPage.php:346
+msgid "Full content (only with republishing permission)"
+msgstr ""
+
+#: includes/Admin/FeedsPage.php:353 includes/Admin/SettingsPage.php:55
+msgid "When items change"
+msgstr ""
+
+#: includes/Admin/FeedsPage.php:360
+msgid "Never update"
+msgstr ""
+
+#: includes/Admin/FeedsPage.php:361
+msgid "Update title, excerpt and media (keep editor changes)"
+msgstr ""
+
+#: includes/Admin/FeedsPage.php:362
+msgid "Also update content (keep editor changes)"
+msgstr ""
+
+#: includes/Admin/FeedsPage.php:369
+msgid "Max items per run"
+msgstr ""
+
+#: includes/Admin/FeedsPage.php:370
+msgid "0 = global setting"
+msgstr ""
+
+#: includes/Admin/FeedsPage.php:380
+msgid "Create media categories"
+msgstr ""
+
+#: includes/Admin/FeedsPage.php:383
+msgid "Tags"
+msgstr ""
+
+#: includes/Admin/FeedsPage.php:384
+msgid "Comma-separated tags added to every item from this feed."
+msgstr ""
+
+#: includes/Admin/FeedsPage.php:385 includes/Admin/SettingsPage.php:82
+msgid "Attribution template"
+msgstr ""
+
+#: includes/Admin/FeedsPage.php:387
+msgid "Empty = global template. Placeholders: {feed_name} {site_url} {source_url} {source_host} {author} {author_suffix} {date}. Allowed HTML: a, strong, em, span, br."
+msgstr ""
+
+#: includes/Admin/FeedsPage.php:392
+msgid "Allowed media types"
+msgstr ""
+
+#: includes/Admin/FeedsPage.php:397
+msgid "None checked = global setting. A feed can only narrow the global allowlist."
+msgstr ""
+
+#: includes/Admin/FeedsPage.php:398 includes/Admin/SettingsPage.php:71
+msgid "Media handling"
+msgstr ""
+
+#: includes/Admin/FeedsPage.php:405
+msgid "Remote embedding (play from source)"
+msgstr ""
+
+#: includes/Admin/FeedsPage.php:406
+msgid "Remote linking (thumbnail + link only)"
+msgstr ""
+
+#: includes/Admin/FeedsPage.php:407
+msgid "Hybrid (local thumbnails, remote media)"
+msgstr ""
+
+#: includes/Admin/FeedsPage.php:408
+msgid "Authorized local import (download media)"
+msgstr ""
+
+#: includes/Admin/FeedsPage.php:415
+msgid "Extraction rules"
+msgstr ""
+
+#: includes/Admin/FeedsPage.php:417
+msgid "Find media in item HTML (description/content)"
+msgstr ""
+
+#: includes/Admin/FeedsPage.php:418
+msgid "Allow trusted provider embeds for this feed"
+msgstr ""
+
+#: includes/Admin/FeedsPage.php:419
+msgid "Fetch linked article page for media:"
+msgstr ""
+
+#: includes/Admin/FeedsPage.php:425
+msgid "Yes"
+msgstr ""
+
+#: includes/Admin/FeedsPage.php:426
+msgid "No"
+msgstr ""
+
+#: includes/Admin/FeedsPage.php:436
+msgid "Rights and content classification"
+msgstr ""
+
+#: includes/Admin/FeedsPage.php:438
+msgid "Content rating"
+msgstr ""
+
+#: includes/Admin/FeedsPage.php:445
+msgid "Unknown / not classified"
+msgstr ""
+
+#: includes/Admin/FeedsPage.php:446 includes/Admin/SettingsPage.php:140
+msgid "General audience"
+msgstr ""
+
+#: includes/Admin/FeedsPage.php:447
+msgid "Adult (explicit)"
+msgstr ""
+
+#: includes/Admin/FeedsPage.php:453
+msgid "Classification is your decision; it is never inferred from the feed URL or domain. Individual posts can be reclassified by moderators."
+msgstr ""
+
+#: includes/Admin/FeedsPage.php:454
+msgid "Permission"
+msgstr ""
+
+#: includes/Admin/FeedsPage.php:455
+msgid "I have the rights or written permission to store this source's media locally / republish its content."
+msgstr ""
+
+#: includes/Admin/FeedsPage.php:456
+msgid "Required for local import, hybrid thumbnails and full-content publishing to be meaningful. Public RSS availability alone does not grant republishing rights."
+msgstr ""
+
+#: includes/Admin/FeedsPage.php:457
+msgid "Licence / permission reference (internal note)"
+msgstr ""
+
+#: includes/Admin/FeedsPage.php:461
+msgid "Save feed"
+msgstr ""
+
+#: includes/Admin/FeedsPage.php:462
+msgid "Save and test"
+msgstr ""
+
+#: includes/Admin/FeedsPage.php:463
+msgid "Cancel"
+msgstr ""
+
+#: includes/Admin/FeedsPage.php:470
+msgid "Last poll"
+msgstr ""
+
+#: includes/Admin/FeedsPage.php:473
+msgid "Consecutive failures"
+msgstr ""
+
+#: includes/Admin/FeedsPage.php:474
+msgid "Last error"
+msgstr ""
+
+#: includes/Admin/FeedsPage.php:475
+msgid "Conditional requests"
+msgstr ""
+
+#: includes/Admin/FeedsPage.php:476
+msgid "Logs for this feed"
+msgstr ""
+
+#: includes/Admin/FeedsPage.php:484 includes/Admin/LogsPage.php:27
+msgid "Import history"
+msgstr ""
+
+#: includes/Admin/FeedsPage.php:496
+msgid "Feed test"
+msgstr ""
+
+#: includes/Admin/FeedsPage.php:505
+msgid "Back to feed"
+msgstr ""
+
+#: includes/Admin/FeedsPage.php:517
+msgid "No test result available. Run a test again."
+msgstr ""
+
+#: includes/Admin/FeedsPage.php:520
+msgid "Feed is valid"
+msgstr ""
+
+#: includes/Admin/FeedsPage.php:520
+msgid "Feed test failed"
+msgstr ""
+
+#: includes/Admin/FeedsPage.php:524
+msgid "redirects"
+msgstr ""
+
+#: includes/Admin/FeedsPage.php:526
+msgid "Format"
+msgstr ""
+
+#: includes/Admin/FeedsPage.php:533
+msgid "First items (nothing was imported)"
+msgstr ""
+
+#: includes/Admin/FeedsPage.php:533 includes/Admin/FeedsPage.php:535
+msgid "Title"
+msgstr ""
+
+#: includes/Admin/FeedsPage.php:533 includes/Admin/FeedsPage.php:536
+msgid "Date"
+msgstr ""
+
+#: includes/Admin/FeedsPage.php:533 includes/Admin/FeedsPage.php:537
+msgid "Classified as"
+msgstr ""
+
+#: includes/Admin/FeedsPage.php:533 includes/Admin/FeedsPage.php:537
+msgid "Media found"
+msgstr ""
+
+#: includes/Admin/FeedsPage.php:536
+msgid "missing/invalid"
+msgstr ""
+
+#: includes/Admin/Ui.php:46
+msgid "in %s"
+msgstr ""
+
+#: includes/Admin/Ui.php:46
+msgid "%s ago"
+msgstr ""
+
+#: includes/Admin/Ui.php:104
+msgid "%s item"
+msgid_plural "%s items"
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/Admin/SettingsPage.php:30
+msgid "Publishing defaults"
+msgstr ""
+
+#: includes/Admin/SettingsPage.php:31
+msgid "Polling and batches"
+msgstr ""
+
+#: includes/Admin/SettingsPage.php:32
+msgid "Network and retries"
+msgstr ""
+
+#: includes/Admin/SettingsPage.php:34
+msgid "Embed providers"
+msgstr ""
+
+#: includes/Admin/SettingsPage.php:35
+msgid "Reader and templates"
+msgstr ""
+
+#: includes/Admin/SettingsPage.php:36
+msgid "Access and compliance (adult sites)"
+msgstr ""
+
+#: includes/Admin/SettingsPage.php:37
+msgid "Retention, logging and uninstall"
+msgstr ""
+
+#: includes/Admin/SettingsPage.php:48
+msgid "Default import mode"
+msgstr ""
+
+#: includes/Admin/SettingsPage.php:48
+msgid "Automatic: publish immediately. Pending: create draft/pending posts for review. Manual: keep items in the queue until approved."
+msgstr ""
+
+#: includes/Admin/SettingsPage.php:49
+msgid "Media only skips items without qualifying media."
+msgstr ""
+
+#: includes/Admin/SettingsPage.php:50
+msgid "Excerpt only is recommended: full articles should only be republished with permission."
+msgstr ""
+
+#: includes/Admin/SettingsPage.php:51
+msgid "Post status for review"
+msgstr ""
+
+#: includes/Admin/SettingsPage.php:52
+msgid "Excerpt length (words)"
+msgstr ""
+
+#: includes/Admin/SettingsPage.php:53
+msgid "Use source publication date"
+msgstr ""
+
+#: includes/Admin/SettingsPage.php:53
+msgid "Falls back to import time when the date is missing, invalid or in the future."
+msgstr ""
+
+#: includes/Admin/SettingsPage.php:54
+msgid "Source categories"
+msgstr ""
+
+#: includes/Admin/SettingsPage.php:54
+msgid "Map feed categories to media tags, media categories, or ignore them."
+msgstr ""
+
+#: includes/Admin/SettingsPage.php:55
+msgid "Fields edited by an editor are never overwritten."
+msgstr ""
+
+#: includes/Admin/SettingsPage.php:56
+msgid "Cross-feed duplicate detection"
+msgstr ""
+
+#: includes/Admin/SettingsPage.php:56
+msgid "Skip items whose canonical URL was already imported (from any feed)."
+msgstr ""
+
+#: includes/Admin/SettingsPage.php:57
+msgid "Post author (user ID)"
+msgstr ""
+
+#: includes/Admin/SettingsPage.php:57
+msgid "0 = no author."
+msgstr ""
+
+#: includes/Admin/SettingsPage.php:58
+msgid "Default polling interval (seconds)"
+msgstr ""
+
+#: includes/Admin/SettingsPage.php:58
+msgid "Minimum 300. Feeds are staggered automatically."
+msgstr ""
+
+#: includes/Admin/SettingsPage.php:59
+msgid "Max items per feed per run"
+msgstr ""
+
+#: includes/Admin/SettingsPage.php:60
+msgid "Max feeds per run"
+msgstr ""
+
+#: includes/Admin/SettingsPage.php:60
+msgid "Runs happen every 5 minutes."
+msgstr ""
+
+#: includes/Admin/SettingsPage.php:61
+msgid "Max processing time per run (seconds)"
+msgstr ""
+
+#: includes/Admin/SettingsPage.php:62
+msgid "Max feed pages per poll"
+msgstr ""
+
+#: includes/Admin/SettingsPage.php:62
+msgid "Follows RFC 5005 / atom:link rel=\"next\" paging when > 1."
+msgstr ""
+
+#: includes/Admin/SettingsPage.php:63
+msgid "Request timeout (seconds)"
+msgstr ""
+
+#: includes/Admin/SettingsPage.php:64
+msgid "Max feed size (MB)"
+msgstr ""
+
+#: includes/Admin/SettingsPage.php:65
+msgid "Immediate retries for temporary errors"
+msgstr ""
+
+#: includes/Admin/SettingsPage.php:65
+msgid "Further failures back off exponentially per feed."
+msgstr ""
+
+#: includes/Admin/SettingsPage.php:66
+msgid "Max backoff (hours)"
+msgstr ""
+
+#: includes/Admin/SettingsPage.php:67
+msgid "Max redirects"
+msgstr ""
+
+#: includes/Admin/SettingsPage.php:67
+msgid "Every redirect target is re-validated (no private/internal destinations)."
+msgstr ""
+
+#: includes/Admin/SettingsPage.php:68
+msgid "Allowed ports"
+msgstr ""
+
+#: includes/Admin/SettingsPage.php:68
+msgid "Comma-separated. Default 80,443."
+msgstr ""
+
+#: includes/Admin/SettingsPage.php:69
+msgid "User agent"
+msgstr ""
+
+#: includes/Admin/SettingsPage.php:69
+msgid "Empty = RSSMediaHub/version (+site URL)."
+msgstr ""
+
+#: includes/Admin/SettingsPage.php:70
+msgid "Supported media types"
+msgstr ""
+
+#: includes/Admin/SettingsPage.php:71
+msgid "Local import only happens for feeds where you confirmed rights. Remote media is never downloaded by default."
+msgstr ""
+
+#: includes/Admin/SettingsPage.php:72
+msgid "Fetch linked article pages"
+msgstr ""
+
+#: includes/Admin/SettingsPage.php:72
+msgid "Look for media (og:video, <video>, provider players) on the item's page when the feed has none."
+msgstr ""
+
+#: includes/Admin/SettingsPage.php:73
+msgid "Max article fetches per feed run"
+msgstr ""
+
+#: includes/Admin/SettingsPage.php:74
+msgid "Max download size (MB)"
+msgstr ""
+
+#: includes/Admin/SettingsPage.php:75
+msgid "Local storage quota (MB)"
+msgstr ""
+
+#: includes/Admin/SettingsPage.php:76
+msgid "Validate media URLs in the background"
+msgstr ""
+
+#: includes/Admin/SettingsPage.php:77
+msgid "Recheck media every (days)"
+msgstr ""
+
+#: includes/Admin/SettingsPage.php:78
+msgid "Media checks per run"
+msgstr ""
+
+#: includes/Admin/SettingsPage.php:79
+msgid "Allowed providers"
+msgstr ""
+
+#: includes/Admin/SettingsPage.php:79
+msgid "Only these providers are ever framed; iframe markup from feeds is never used."
+msgstr ""
+
+#: includes/Admin/SettingsPage.php:80
+msgid "Custom providers"
+msgstr ""
+
+#: includes/Admin/SettingsPage.php:80
+msgid "One per line: Label | exact.host.example | /embed/path-prefix/ (https only)."
+msgstr ""
+
+#: includes/Admin/SettingsPage.php:81
+msgid "Send frame-src Content-Security-Policy"
+msgstr ""
+
+#: includes/Admin/SettingsPage.php:81
+msgid "On media pages, only allowed provider origins can be framed."
+msgstr ""
+
+#: includes/Admin/SettingsPage.php:82
+msgid "Placeholders: {feed_name} {site_url} {source_url} {source_host} {author} {author_suffix} {date}."
+msgstr ""
+
+#: includes/Admin/SettingsPage.php:83
+msgid "Items per page"
+msgstr ""
+
+#: includes/Admin/SettingsPage.php:84
+msgid "Default view"
+msgstr ""
+
+#: includes/Admin/SettingsPage.php:85
+msgid "Show the media reader on the home page"
+msgstr ""
+
+#: includes/Admin/SettingsPage.php:85
+msgid "When the home page shows latest posts. Alternatively use the [rmh_reader] shortcode on any page."
+msgstr ""
+
+#: includes/Admin/SettingsPage.php:86
+msgid "Show related posts"
+msgstr ""
+
+#: includes/Admin/SettingsPage.php:87
+msgid "Related posts count"
+msgstr ""
+
+#: includes/Admin/SettingsPage.php:88
+msgid "Show share links"
+msgstr ""
+
+#: includes/Admin/SettingsPage.php:89
+msgid "This is an adult-content site"
+msgstr ""
+
+#: includes/Admin/SettingsPage.php:89
+msgid "Adds rating meta tags to media pages."
+msgstr ""
+
+#: includes/Admin/SettingsPage.php:90
+msgid "Add RTA label"
+msgstr ""
+
+#: includes/Admin/SettingsPage.php:90
+msgid "Restricted To Adults meta label for parental-control software."
+msgstr ""
+
+#: includes/Admin/SettingsPage.php:91
+msgid "Default content rating"
+msgstr ""
+
+#: includes/Admin/SettingsPage.php:91
+msgid "Applied to feeds without their own classification. Never inferred from URLs."
+msgstr ""
+
+#: includes/Admin/SettingsPage.php:92
+msgid "Content warning on adult posts"
+msgstr ""
+
+#: includes/Admin/SettingsPage.php:93
+msgid "Enable age gate"
+msgstr ""
+
+#: includes/Admin/SettingsPage.php:94
+msgid "Age gate mode"
+msgstr ""
+
+#: includes/Admin/SettingsPage.php:94
+msgid "Server: content is not sent until the visitor passes (gated pages are never cached). Overlay: cache-friendly JavaScript overlay – a deterrent only."
+msgstr ""
+
+#: includes/Admin/SettingsPage.php:95
+msgid "Gate applies to"
+msgstr ""
+
+#: includes/Admin/SettingsPage.php:96
+msgid "Age verification method"
+msgstr ""
+
+#: includes/Admin/SettingsPage.php:96
+msgid "Self-declaration is NOT legal age verification. Register a provider adapter (rmh_age_verifiers filter) where verification is legally required."
+msgstr ""
+
+#: includes/Admin/SettingsPage.php:97
+msgid "Minimum age"
+msgstr ""
+
+#: includes/Admin/SettingsPage.php:98
+msgid "Remember verification for (days)"
+msgstr ""
+
+#: includes/Admin/SettingsPage.php:99
+msgid "Age gate message"
+msgstr ""
+
+#: includes/Admin/SettingsPage.php:100
+msgid "Blocked jurisdictions"
+msgstr ""
+
+#: includes/Admin/SettingsPage.php:100
+msgid "ISO 3166 codes, comma-separated (e.g. \"US-UT, GB\"). Visitors get HTTP 451 on media pages. Requires a country source below. When only the country is known, a subdivision rule (US-UT) conservatively blocks the whole country; supply \"US-UT\"-style codes via the rmh_visitor_country filter for precise regional rules."
+msgstr ""
+
+#: includes/Admin/SettingsPage.php:101
+msgid "Trusted country header"
+msgstr ""
+
+#: includes/Admin/SettingsPage.php:101
+msgid "Request header set by your CDN/proxy, e.g. CF-IPCountry. Only use a header your edge overwrites. Or provide the country via the rmh_visitor_country filter."
+msgstr ""
+
+#: includes/Admin/SettingsPage.php:102
+msgid "Allow visitor reports"
+msgstr ""
+
+#: includes/Admin/SettingsPage.php:103
+msgid "Moderation contact email"
+msgstr ""
+
+#: includes/Admin/SettingsPage.php:103
+msgid "Receives escalations and removal requests. Empty = site admin email."
+msgstr ""
+
+#: includes/Admin/SettingsPage.php:104
+msgid "Privacy-conscious view counts"
+msgstr ""
+
+#: includes/Admin/SettingsPage.php:104
+msgid "Aggregate per-post counter; no IPs, cookies or identifiers are stored."
+msgstr ""
+
+#: includes/Admin/SettingsPage.php:105
+msgid "Log level"
+msgstr ""
+
+#: includes/Admin/SettingsPage.php:106
+msgid "Keep logs (days)"
+msgstr ""
+
+#: includes/Admin/SettingsPage.php:107
+msgid "Keep import history (days)"
+msgstr ""
+
+#: includes/Admin/SettingsPage.php:108
+msgid "Keep rejected/skipped items (days)"
+msgstr ""
+
+#: includes/Admin/SettingsPage.php:109
+msgid "On uninstall"
+msgstr ""
+
+#: includes/Admin/SettingsPage.php:109
+msgid "Keep everything (default), keep imported posts but remove plugin data, or delete everything including imported posts."
+msgstr ""
+
+#: includes/Admin/SettingsPage.php:121
+msgid "Pending review"
+msgstr ""
+
+#: includes/Admin/SettingsPage.php:122
+msgid "Manual approval"
+msgstr ""
+
+#: includes/Admin/SettingsPage.php:124
+msgid "Media only"
+msgstr ""
+
+#: includes/Admin/SettingsPage.php:125
+msgid "Excerpt only"
+msgstr ""
+
+#: includes/Admin/SettingsPage.php:126
+msgid "Full content"
+msgstr ""
+
+#: includes/Admin/SettingsPage.php:127
+msgid "Draft"
+msgstr ""
+
+#: includes/Admin/SettingsPage.php:128
+msgid "As media tags"
+msgstr ""
+
+#: includes/Admin/SettingsPage.php:129
+msgid "As media categories"
+msgstr ""
+
+#: includes/Admin/SettingsPage.php:130
+msgid "Ignore"
+msgstr ""
+
+#: includes/Admin/SettingsPage.php:131
+msgid "Never"
+msgstr ""
+
+#: includes/Admin/SettingsPage.php:132
+msgid "Update metadata"
+msgstr ""
+
+#: includes/Admin/SettingsPage.php:133
+msgid "Remote embedding"
+msgstr ""
+
+#: includes/Admin/SettingsPage.php:134
+msgid "Remote linking"
+msgstr ""
+
+#: includes/Admin/SettingsPage.php:135
+msgid "Authorized local import"
+msgstr ""
+
+#: includes/Admin/SettingsPage.php:136
+msgid "Hybrid (local thumbnails)"
+msgstr ""
+
+#: includes/Admin/SettingsPage.php:138
+msgid "Compact reader list"
+msgstr ""
+
+#: includes/Admin/SettingsPage.php:139
+msgid "Unknown"
+msgstr ""
+
+#: includes/Admin/SettingsPage.php:141
+msgid "Adult"
+msgstr ""
+
+#: includes/Admin/SettingsPage.php:142
+msgid "Server (strict)"
+msgstr ""
+
+#: includes/Admin/SettingsPage.php:143
+msgid "Overlay (cache-friendly deterrent)"
+msgstr ""
+
+#: includes/Admin/SettingsPage.php:144
+msgid "Posts rated adult"
+msgstr ""
+
+#: includes/Admin/SettingsPage.php:145
+msgid "All media pages"
+msgstr ""
+
+#: includes/Admin/SettingsPage.php:150
+msgid "Keep everything"
+msgstr ""
+
+#: includes/Admin/SettingsPage.php:151
+msgid "Keep imported posts, remove plugin data"
+msgstr ""
+
+#: includes/Admin/SettingsPage.php:152
+msgid "Delete everything including imported posts"
+msgstr ""
+
+#: includes/Admin/SettingsPage.php:290
+msgid "RSS Media Hub Settings"
+msgstr ""
+
+#: includes/Admin/SettingsPage.php:292
+msgid "Settings sections"
+msgstr ""
+
+#: includes/Admin/SettingsPage.php:311
+msgid "System cron: set DISABLE_WP_CRON to true in wp-config.php and run \"wp rmh run\" (WP-CLI) or \"wp cron event run --due-now\" every 5 minutes."
+msgstr ""
+
+#: includes/Admin/Admin.php:52
+msgid "Dashboard"
+msgstr ""
+
+#: includes/Admin/Admin.php:55 includes/Admin/MediaPage.php:43
+msgid "Media Library"
+msgstr ""
+
+#: includes/Admin/Admin.php:56 includes/Admin/ModerationPage.php:37
+msgid "Reports & Moderation"
+msgstr ""
+
+#: includes/Admin/Admin.php:58 includes/Admin/Admin.php:145
+msgid "Settings"
+msgstr ""
+
+#: includes/Admin/Admin.php:59 includes/Admin/LogsPage.php:33
+msgid "Logs & Diagnostics"
+msgstr ""
+
+#: includes/Admin/Admin.php:83
+msgid "Copied to clipboard"
+msgstr ""
+
+#: includes/Admin/Admin.php:130
+msgid "Scheduled imports look overdue or unscheduled. If WP-Cron is disabled, configure a system cron job (see Logs & Diagnostics → Scheduling)."
+msgstr ""
+
+#: includes/Admin/Admin.php:134
+msgid "The age gate uses self-declaration, which is a content warning only and is not legally compliant age verification in jurisdictions that require it. Integrate a verification provider (see docs/AGE-VERIFICATION.md)."
+msgstr ""
+
+#: includes/Admin/Admin.php:153
+msgid "Import provenance"
+msgstr ""
+
+#: includes/Admin/Admin.php:164
+msgid "Not created by the importer."
+msgstr ""
+
+#: includes/Admin/Admin.php:168
+msgid "Feed:"
+msgstr ""
+
+#: includes/Admin/Admin.php:169 includes/Frontend/Template.php:314
+msgid "Source:"
+msgstr ""
+
+#: includes/Admin/Admin.php:170
+msgid "GUID:"
+msgstr ""
+
+#: includes/Admin/Admin.php:171
+msgid "Discovered:"
+msgstr ""
+
+#: includes/Admin/Admin.php:172
+msgid "Media type:"
+msgstr ""
+
+#: includes/Admin/Admin.php:175 includes/Admin/ModerationPage.php:93
+msgid "Hidden: %s"
+msgstr ""
+
+#: includes/Admin/Admin.php:177
+msgid "View in import queue"
+msgstr ""
+
+#: includes/Admin/MediaPage.php:49
+msgid "Local storage: %1$s of %2$s"
+msgstr ""
+
+#: includes/Admin/MediaPage.php:60 includes/PostTypes.php:50
+msgid "Video"
+msgstr ""
+
+#: includes/Admin/MediaPage.php:61 includes/PostTypes.php:51
+msgid "Audio"
+msgstr ""
+
+#: includes/Admin/MediaPage.php:62
+msgid "Image / gallery"
+msgstr ""
+
+#: includes/Admin/MediaPage.php:63
+msgid "External embed"
+msgstr ""
+
+#: includes/Admin/MediaPage.php:64
+msgid "External link"
+msgstr ""
+
+#: includes/Admin/MediaPage.php:69
+msgid "Any validation status"
+msgstr ""
+
+#: includes/Admin/MediaPage.php:72
+msgid "Stored locally"
+msgstr ""
+
+#: includes/Admin/MediaPage.php:73
+msgid "URL contains…"
+msgstr ""
+
+#: includes/Admin/MediaPage.php:78
+msgid "No media records match."
+msgstr ""
+
+#: includes/Admin/MediaPage.php:86
+msgid "Recheck selected (max 25)"
+msgstr ""
+
+#: includes/Admin/MediaPage.php:91 includes/Admin/MediaPage.php:102
+msgid "Preview"
+msgstr ""
+
+#: includes/Admin/MediaPage.php:93 includes/Admin/MediaPage.php:122
+msgid "Validation"
+msgstr ""
+
+#: includes/Admin/MediaPage.php:101
+msgid "Select media"
+msgstr ""
+
+#: includes/Admin/MediaPage.php:112
+msgid "Extracted via %s"
+msgstr ""
+
+#: includes/Admin/MediaPage.php:116
+msgid "Stored locally (%s)"
+msgstr ""
+
+#: includes/Admin/MediaPage.php:120
+msgid "Download: %s"
+msgstr ""
+
+#: includes/Admin/MediaPage.php:134
+msgid "Recheck URL"
+msgstr ""
+
+#: includes/Admin/MediaPage.php:143
+msgid "Retry extraction"
+msgstr ""
+
+#: includes/Admin/MediaPage.php:152
+msgid "Remove local file"
+msgstr ""
+
+#: includes/Admin/MediaPage.php:154
+msgid "Delete the locally stored copy? The remote reference is kept."
+msgstr ""
+
+#: includes/Admin/MediaPage.php:163
+msgid "Import locally"
+msgstr ""
+
+#: includes/Admin/MediaPage.php:173
+msgid "Block URL"
+msgstr ""
+
+#: includes/Admin/MediaPage.php:175
+msgid "Block this media URL everywhere?"
+msgstr ""
+
+#: includes/Admin/LogsPage.php:26
+msgid "Logs"
+msgstr ""
+
+#: includes/Admin/LogsPage.php:29
+msgid "Diagnostic report"
+msgstr ""
+
+#: includes/Admin/LogsPage.php:30
+msgid "Test a feed URL"
+msgstr ""
+
+#: includes/Admin/LogsPage.php:73
+msgid "All channels"
+msgstr ""
+
+#: includes/Admin/LogsPage.php:74
+msgid "Import"
+msgstr ""
+
+#: includes/Admin/LogsPage.php:75
+msgid "Parsing"
+msgstr ""
+
+#: includes/Admin/LogsPage.php:77
+msgid "Media extraction / validation"
+msgstr ""
+
+#: includes/Admin/LogsPage.php:78
+msgid "Publishing"
+msgstr ""
+
+#: includes/Admin/LogsPage.php:80
+msgid "Retries"
+msgstr ""
+
+#: includes/Admin/LogsPage.php:81
+msgid "Security"
+msgstr ""
+
+#: includes/Admin/LogsPage.php:82
+msgid "Database"
+msgstr ""
+
+#: includes/Admin/LogsPage.php:83
+msgid "Moderation"
+msgstr ""
+
+#: includes/Admin/LogsPage.php:84
+msgid "Feed tests"
+msgstr ""
+
+#: includes/Admin/LogsPage.php:96
+msgid "All levels"
+msgstr ""
+
+#: includes/Admin/LogsPage.php:108
+msgid "Message contains…"
+msgstr ""
+
+#: includes/Admin/LogsPage.php:112
+msgid "Delete all logs"
+msgstr ""
+
+#: includes/Admin/LogsPage.php:112
+msgid "Delete every log entry?"
+msgstr ""
+
+#: includes/Admin/LogsPage.php:114
+msgid "No log entries match."
+msgstr ""
+
+#: includes/Admin/LogsPage.php:117 includes/Admin/LogsPage.php:125
+msgid "Time"
+msgstr ""
+
+#: includes/Admin/LogsPage.php:117 includes/Admin/LogsPage.php:126
+msgid "Level"
+msgstr ""
+
+#: includes/Admin/LogsPage.php:117 includes/Admin/LogsPage.php:127
+msgid "Channel"
+msgstr ""
+
+#: includes/Admin/LogsPage.php:117 includes/Admin/LogsPage.php:128
+msgid "Message"
+msgstr ""
+
+#: includes/Admin/LogsPage.php:117 includes/Admin/LogsPage.php:132
+msgid "Refs"
+msgstr ""
+
+#: includes/Admin/LogsPage.php:130
+msgid "Context"
+msgstr ""
+
+#: includes/Admin/LogsPage.php:166
+msgid "All results"
+msgstr ""
+
+#: includes/Admin/LogsPage.php:183
+msgid "No import runs recorded yet."
+msgstr ""
+
+#: includes/Admin/LogsPage.php:187
+msgid "Fetched"
+msgstr ""
+
+#: includes/Admin/LogsPage.php:191
+msgid "Updated"
+msgstr ""
+
+#: includes/Admin/LogsPage.php:194
+msgid "Extract fail"
+msgstr ""
+
+#: includes/Admin/LogsPage.php:195
+msgid "Publish fail"
+msgstr ""
+
+#: includes/Admin/LogsPage.php:197 includes/Admin/LogsPage.php:204
+msgid "Run"
+msgstr ""
+
+#: includes/Admin/LogsPage.php:197 includes/Admin/LogsPage.php:206
+msgid "Result"
+msgstr ""
+
+#: includes/Admin/LogsPage.php:206
+msgid "logs"
+msgstr ""
+
+#: includes/Admin/LogsPage.php:222
+msgid "Recurring run"
+msgstr ""
+
+#: includes/Admin/LogsPage.php:222
+msgid "scheduled"
+msgstr ""
+
+#: includes/Admin/LogsPage.php:223
+msgid "never"
+msgstr ""
+
+#: includes/Admin/LogsPage.php:224
+msgid "Overdue"
+msgstr ""
+
+#: includes/Admin/LogsPage.php:224
+msgid "yes"
+msgstr ""
+
+#: includes/Admin/LogsPage.php:224
+msgid "no"
+msgstr ""
+
+#: includes/Admin/LogsPage.php:225
+msgid "Overlap lock"
+msgstr ""
+
+#: includes/Admin/LogsPage.php:225
+msgid "held"
+msgstr ""
+
+#: includes/Admin/LogsPage.php:225
+msgid "expires %s"
+msgstr ""
+
+#: includes/Admin/LogsPage.php:225
+msgid "Force release"
+msgstr ""
+
+#: includes/Admin/LogsPage.php:225
+msgid "Only release the lock if no run is actually in progress. Continue?"
+msgstr ""
+
+#: includes/Admin/LogsPage.php:225
+msgid "free"
+msgstr ""
+
+#: includes/Admin/LogsPage.php:226
+msgid "Daily maintenance"
+msgstr ""
+
+#: includes/Admin/LogsPage.php:226
+msgid "Apply retention now"
+msgstr ""
+
+#: includes/Admin/LogsPage.php:227
+msgid "DISABLE_WP_CRON is set: imports only run from a system cron job."
+msgstr ""
+
+#: includes/Admin/LogsPage.php:227
+msgid "Enabled (runs on site traffic). For reliable production scheduling use a system cron job."
+msgstr ""
+
+#: includes/Admin/LogsPage.php:229
+msgid "Reliable scheduling with system cron"
+msgstr ""
+
+#: includes/Admin/LogsPage.php:230
+msgid "Add to wp-config.php:"
+msgstr ""
+
+#: includes/Admin/LogsPage.php:231
+msgid "Add a crontab entry that runs every 5 minutes, either with WP-CLI:"
+msgstr ""
+
+#: includes/Admin/LogsPage.php:232
+msgid "or without WP-CLI:"
+msgstr ""
+
+#: includes/Admin/LogsPage.php:233
+msgid "Runs never overlap (global lock + per-feed leases), and re-running is idempotent."
+msgstr ""
+
+#: includes/Admin/LogsPage.php:240
+msgid "Copy this report into support requests. Feed URLs are redacted and no credentials, salts or visitor data are included."
+msgstr ""
+
+#: includes/Admin/LogsPage.php:241
+msgid "Copy report"
+msgstr ""
+
+#: includes/Admin/LogsPage.php:255
+msgid "Test (dry run)"
+msgstr ""
+
+#: includes/Admin/ModerationPage.php:40
+msgid "Escalation policy."
+msgstr ""
+
+#: includes/Admin/ModerationPage.php:41
+msgid "Reports of suspected child sexual abuse material or non-consensual content unpublish the post immediately and are marked \"escalated\". Do not delete escalated content until you have followed your legal reporting obligations (for example NCMEC CyberTipline in the US, the IWF in the UK, or your national hotline / law enforcement). Taking an item down unpublishes it and blocks its GUID from re-import while keeping the record."
+msgstr ""
+
+#: includes/Admin/ModerationPage.php:52
+msgid "Open"
+msgstr ""
+
+#: includes/Admin/ModerationPage.php:53
+msgid "Escalated"
+msgstr ""
+
+#: includes/Admin/ModerationPage.php:54
+msgid "Resolved"
+msgstr ""
+
+#: includes/Admin/ModerationPage.php:55
+msgid "Dismissed"
+msgstr ""
+
+#: includes/Admin/ModerationPage.php:60
+msgid "All reasons"
+msgstr ""
+
+#: includes/Admin/ModerationPage.php:67
+msgid "No reports."
+msgstr ""
+
+#: includes/Admin/ModerationPage.php:76 includes/Admin/ModerationPage.php:98
+msgid "Details"
+msgstr ""
+
+#: includes/Admin/ModerationPage.php:78 includes/Admin/ModerationPage.php:100 includes/Admin/ModerationPage.php:105
+msgid "Decision"
+msgstr ""
+
+#: includes/Admin/ModerationPage.php:95
+msgid "(post deleted)"
+msgstr ""
+
+#: includes/Admin/ModerationPage.php:98
+msgid "Contact:"
+msgstr ""
+
+#: includes/Admin/ModerationPage.php:101
+msgid "Apply this decision?"
+msgstr ""
+
+#: includes/Admin/ModerationPage.php:111
+msgid "Resolve (no change)"
+msgstr ""
+
+#: includes/Admin/ModerationPage.php:112
+msgid "Dismiss (restore if auto-hidden)"
+msgstr ""
+
+#: includes/Admin/ModerationPage.php:113
+msgid "Escalate (hide + notify)"
+msgstr ""
+
+#: includes/Admin/ModerationPage.php:114
+msgid "Take down item"
+msgstr ""
+
+#: includes/Admin/ModerationPage.php:115
+msgid "Restore post"
+msgstr ""
+
+#: includes/Admin/ModerationPage.php:116
+msgid "Block source (disable feed + domain)"
+msgstr ""
+
+#: includes/Admin/ModerationPage.php:123
+msgid "Note (optional)"
+msgstr ""
+
+#: includes/Admin/Actions.php:62
+msgid "Unknown action."
+msgstr ""
+
+#: includes/Admin/Actions.php:66
+msgid "You do not have permission to do that."
+msgstr ""
+
+#: includes/Admin/Actions.php:180
+msgid "Feed saved."
+msgstr ""
+
+#: includes/Admin/Actions.php:231
+msgid "Import queued. It runs in the background within a minute (refresh to see results)."
+msgstr ""
+
+#: includes/Admin/Actions.php:234
+msgid "Feed paused."
+msgstr ""
+
+#: includes/Admin/Actions.php:237
+msgid "Feed resumed and scheduled now."
+msgstr ""
+
+#: includes/Admin/Actions.php:241
+msgid "Feed removed. Its imported posts were kept."
+msgstr ""
+
+#: includes/Admin/Actions.php:245
+msgid "Unknown feed action."
+msgstr ""
+
+#: includes/Admin/Actions.php:259
+msgid "Item approved and published."
+msgstr ""
+
+#: includes/Admin/Actions.php:260
+msgid "Item rejected."
+msgstr ""
+
+#: includes/Admin/Actions.php:261
+msgid "Item processed again."
+msgstr ""
+
+#: includes/Admin/Actions.php:262
+msgid "Media extraction re-run."
+msgstr ""
+
+#: includes/Admin/Actions.php:263
+msgid "Item taken down and its GUID blocked from re-import."
+msgstr ""
+
+#: includes/Admin/Actions.php:266
+msgid "Unknown item action."
+msgstr ""
+
+#: includes/Admin/Actions.php:283
+msgid "Choose a bulk action and at least one item."
+msgstr ""
+
+#: includes/Admin/Actions.php:297
+msgid "Bulk %1$s: %2$d succeeded, %3$d failed."
+msgstr ""
+
+#: includes/Admin/Actions.php:319
+msgid "Validation: %1$s – %2$s"
+msgstr ""
+
+#: includes/Admin/Actions.php:322
+msgid "Media extraction re-run for the item."
+msgstr ""
+
+#: includes/Admin/Actions.php:325
+msgid "Local file removed; the remote reference was kept."
+msgstr ""
+
+#: includes/Admin/Actions.php:336
+msgid "Media URL blocked; it will no longer be embedded."
+msgstr ""
+
+#: includes/Admin/Actions.php:341
+msgid "Local import is not authorized for this feed (confirm rights and choose \"Authorized local import\" in the feed settings)."
+msgstr ""
+
+#: includes/Admin/Actions.php:345
+msgid "Download queued for the next background run."
+msgstr ""
+
+#: includes/Admin/Actions.php:348
+msgid "Unknown media action."
+msgstr ""
+
+#: includes/Admin/Actions.php:367
+msgid "Rechecked %d media item(s)."
+msgstr ""
+
+#: includes/Admin/Actions.php:379
+msgid "Moderation decision saved."
+msgstr ""
+
+#: includes/Admin/Actions.php:388
+msgid "Restriction added."
+msgstr ""
+
+#: includes/Admin/Actions.php:396
+msgid "Restriction not found."
+msgstr ""
+
+#: includes/Admin/Actions.php:396
+msgid "Restriction removed."
+msgstr ""
+
+#: includes/Admin/Actions.php:412
+msgid "No imported item matches that source URL."
+msgstr ""
+
+#: includes/Admin/Actions.php:422
+msgid "%d item(s) taken down and the URL blocked from re-import."
+msgstr ""
+
+#: includes/Admin/Actions.php:444
+msgid "All active feeds are due now; the background run has been triggered."
+msgstr ""
+
+#: includes/Admin/Actions.php:454
+msgid "%1$d failed item(s) and %2$d failing feed(s) requeued."
+msgstr ""
+
+#: includes/Admin/Actions.php:464
+msgid "Scheduler lock released."
+msgstr ""
+
+#: includes/Admin/Actions.php:474
+msgid "%d log entries deleted."
+msgstr ""
+
+#: includes/Admin/Actions.php:484
+msgid "Retention applied: %1$d logs, %2$d jobs, %3$d rejected items removed."
+msgstr ""
+
+#: includes/Http/UrlGuard.php:96
+msgid "Could not resolve host %s."
+msgstr ""
+
+#: includes/Http/UrlGuard.php:139
+msgid "Destination refused: %s."
+msgstr ""
+
+#: includes/Http/HttpClient.php:167
+msgid "Response exceeds the %d byte limit."
+msgstr ""
+
+#: includes/Http/HttpClient.php:176
+msgid "Redirect without a valid http(s) Location."
+msgstr ""
+
+#: includes/Http/HttpClient.php:189
+msgid "Too many redirects."
+msgstr ""
+
+#: includes/PostTypes.php:52
+msgid "Image"
+msgstr ""
+
+#: includes/PostTypes.php:53
+msgid "Gallery"
+msgstr ""
+
+#: includes/PostTypes.php:54
+msgid "External video"
+msgstr ""
+
+#: includes/PostTypes.php:55
+msgid "Article"
+msgstr ""
+
+#: includes/PostTypes.php:72 includes/PostTypes.php:80
+msgid "Media Posts"
+msgstr ""
+
+#: includes/PostTypes.php:73
+msgid "Media Post"
+msgstr ""
+
+#: includes/PostTypes.php:74
+msgid "Add Media Post"
+msgstr ""
+
+#: includes/PostTypes.php:75
+msgid "Edit Media Post"
+msgstr ""
+
+#: includes/PostTypes.php:76
+msgid "View Media Post"
+msgstr ""
+
+#: includes/PostTypes.php:77
+msgid "Search Media Posts"
+msgstr ""
+
+#: includes/PostTypes.php:78
+msgid "No media posts found."
+msgstr ""
+
+#: includes/PostTypes.php:79
+msgid "No media posts found in Trash."
+msgstr ""
+
+#: includes/PostTypes.php:102
+msgid "Media Categories"
+msgstr ""
+
+#: includes/PostTypes.php:103
+msgid "Media Category"
+msgstr ""
+
+#: includes/PostTypes.php:121
+msgid "Media Tags"
+msgstr ""
+
+#: includes/PostTypes.php:122
+msgid "Media Tag"
+msgstr ""
+
+#: includes/PostTypes.php:140
+msgid "Media Types"
+msgstr ""
+
+#: includes/PostTypes.php:141
+msgid "Media Type"
+msgstr ""
+
+#: includes/Frontend/Template.php:210
+msgid "%1$s – image %2$d"
+msgstr ""
+
+#: includes/Frontend/Template.php:284
+msgid "Original source"
+msgstr ""
+
+#: includes/Frontend/Template.php:307
+msgid " by %s"
+msgstr ""
+
+#: includes/Frontend/Template.php:333
+msgid "Explicit content (18+)"
+msgstr ""
+
+#: includes/Frontend/Template.php:333
+msgid "18+ Explicit"
+msgstr ""
+
+#: includes/Frontend/Template.php:409
+msgid "Email"
+msgstr ""
+
+#: includes/Frontend/Frontend.php:185
+msgid "Loading…"
+msgstr ""
+
+#: includes/Frontend/Frontend.php:186
+msgid "Could not load more items. Please try again."
+msgstr ""
+
+#: includes/Frontend/Frontend.php:187
+msgid "Sending…"
+msgstr ""
+
+#: includes/Frontend/Frontend.php:189
+msgid "Your report could not be sent. Please try again later."
+msgstr ""
+
+#: includes/Frontend/Frontend.php:190
+msgid "Link copied"
+msgstr ""
+
+#: includes/Frontend/Frontend.php:191
+msgid "Close"
+msgstr ""
+
+#: includes/Frontend/Frontend.php:192
+msgid "Previous image"
+msgstr ""
+
+#: includes/Frontend/Frontend.php:193
+msgid "Next image"
+msgstr ""
+
+#: includes/Frontend/Frontend.php:194
+msgid "Adults only"
+msgstr ""
+
+#: includes/Frontend/Frontend.php:195
+msgid "This site contains sexually explicit material intended for adults only."
+msgstr ""
+
+#: includes/Import/Importer.php:740
+msgid "Removed feed"
+msgstr ""
+
+#: includes/Import/Importer.php:759 includes/Import/Importer.php:796 includes/Import/Importer.php:816 includes/Import/Importer.php:844 includes/Import/Importer.php:889
+msgid "Item not found."
+msgstr ""
+
+#: includes/Import/Importer.php:773
+msgid "This item cannot be approved in its current state."
+msgstr ""
+
+#: includes/Import/Importer.php:779
+msgid "Publishing failed."
+msgstr ""
+
+#: includes/Import/Importer.php:819
+msgid "Only failed items can be retried."
+msgstr ""
+
+#: includes/Import/Importer.php:957
+msgid "This URL matches the source blocklist."
+msgstr ""
+
+#: includes/Import/Importer.php:1008
+msgid "Valid %1$s feed with %2$d item(s)."
+msgstr ""
+
+#: includes/Import/Publisher.php:126
+msgid "wp_insert_post() returned 0."
+msgstr ""
+
+#: includes/Media/MediaDownloader.php:132
+msgid "Local import is not authorized for this feed."
+msgstr ""
+
+#: includes/Media/MediaDownloader.php:175
+msgid "Local thumbnails are not authorized for this feed."
+msgstr ""
+
+#: includes/Media/MediaDownloader.php:202
+msgid "Local media storage quota reached."
+msgstr ""
+
+#: includes/Media/MediaDownloader.php:205
+msgid "URL is blocklisted."
+msgstr ""
+
+#: includes/Media/MediaDownloader.php:214
+msgid "Could not create a temporary file."
+msgstr ""
+
+#: includes/Media/MediaDownloader.php:232
+msgid "Downloaded file is empty."
+msgstr ""
+
+#: includes/Media/MediaDownloader.php:248
+msgid "Refused file with detected type \"%s\"."
+msgstr ""
+
+#: includes/Media/MediaDownloader.php:252
+msgid "File is not a valid image."
+msgstr ""
+
+#: includes/Media/MediaDownloader.php:286
+msgid "This media has no local file."
+msgstr ""
+
+#: includes/Media/MediaDownloader.php:289
+msgid "The attachment was not created by RSS Media Hub; not deleted."
+msgstr ""
+
+#: includes/Feed/FeedParser.php:60
+msgid "Unrecognized feed format (root element <%s>)."
+msgstr ""
+
+#: includes/Feed/XmlLoader.php:27
+msgid "The response body is empty."
+msgstr ""
+
+#: includes/Feed/XmlLoader.php:30
+msgid "The feed document is too large."
+msgstr ""
+
+#: includes/Feed/XmlLoader.php:37
+msgid "The document declares XML entities, which are not allowed."
+msgstr ""
+
+#: includes/Feed/XmlLoader.php:44
+msgid "The response is not an XML feed (it looks like HTML or plain text)."
+msgstr ""
+
+#: includes/Feed/XmlLoader.php:94
+msgid "Invalid XML: %s"
+msgstr ""
+
+#: includes/Feed/AbstractAdapter.php:78
+msgid "(untitled)"
+msgstr ""
+

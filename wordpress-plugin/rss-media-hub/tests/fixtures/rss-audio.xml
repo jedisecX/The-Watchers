@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd">
+  <channel>
+    <title>Night Stories Audio</title>
+    <link>https://audio.example/</link>
+    <description>Synthetic podcast.</description>
+    <item>
+      <title>Episode 12</title>
+      <link>https://audio.example/ep/12</link>
+      <guid>https://audio.example/ep/12</guid>
+      <pubDate>Mon, 02 Jun 2025 08:00:00 +0000</pubDate>
+      <author>host@audio.example (The Host)</author>
+      <description>Episode twelve, an audio story.</description>
+      <enclosure url="https://cdn.audio.example/ep12.mp3" length="5120000" type="audio/mpeg"/>
+      <itunes:image href="https://cdn.audio.example/ep12.jpg"/>
+    </item>
+  </channel>
+</rss>
