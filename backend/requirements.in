@@ -1,6 +1,6 @@
 # Runtime dependencies (direct). Compile with:
 #   uv pip compile requirements.in --generate-hashes -o requirements.txt
-fastapi>=0.115,<1
+fastapi>=0.143.0,<1
 uvicorn[standard]>=0.30,<1
 sqlalchemy>=2.0,<3
 psycopg[binary]>=3.2,<4
