@@ -11,5 +11,5 @@ argon2-cffi>=23.1,<26
 pyotp>=2.9,<3
 webauthn>=2.2,<4
 cryptography>=43
-pillow>=11,<13
+pillow>=13.0.0,<14
 redis>=5,<9
